@@ -1,0 +1,285 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Tienda Online - Demo</title>
+  <style>
+    :root{ --accent:#0ea5a4; --dark:#0f172a; --muted:#6b7280; --card:#ffffff; }
+    *{box-sizing:border-box}
+    body{font-family:Inter, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial; margin:0; background:#f3f4f6; color:var(--dark);}
+    header{background:linear-gradient(90deg,#ecfeff, #f0f9ff); padding:18px 24px; box-shadow:0 2px 6px rgba(2,6,23,0.04); position:sticky; top:0; z-index:40}
+    .nav {max-width:1100px; margin:0 auto; display:flex; align-items:center; gap:16px}
+    .brand{font-weight:700; font-size:1.15rem; color:var(--dark)}
+    nav{margin-left:auto; display:flex; gap:12px; align-items:center}
+    a.btn{background:var(--accent); color:white; padding:8px 12px; border-radius:10px; text-decoration:none}
+    .btn-ghost{background:transparent; color:var(--dark); padding:8px 10px; border-radius:8px; text-decoration:none}
+
+    /* Pantalla de bienvenida */
+    .welcome-screen {
+      position: fixed;
+      inset: 0;
+      background: black;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      transition: opacity 0.6s ease;
+    }
+    .welcome-screen img {
+      max-width: 100%;
+      height: auto;
+    }
+    .welcome-screen button {
+      margin-top: 20px;
+      background: var(--accent);
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 12px;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+
+    /* Layout */
+    .container{max-width:1100px; margin:28px auto; padding:0 20px}
+    .hero{display:grid; grid-template-columns:1fr 420px; gap:20px; align-items:center; margin-bottom:28px}
+    .hero-card{background:linear-gradient(180deg,#fff 0%, #fbfdff 100%); padding:28px; border-radius:14px; box-shadow:0 6px 20px rgba(2,6,23,0.06)}
+    .hero h1{margin:0 0 12px; font-size:1.7rem}
+    .hero p{margin:0 0 16px; color:var(--muted)}
+    .search{display:flex; gap:8px}
+    .search input{flex:1; padding:10px 12px; border-radius:10px; border:1px solid #e5e7eb}
+    .product-sidebar{padding:18px}
+
+    /* Sections */
+    .sections{display:grid; grid-template-columns:1fr; gap:20px}
+    .products{background:white; padding:18px; border-radius:12px}
+    .grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:14px}
+    .card{background:var(--card); border-radius:12px; padding:12px; box-shadow:0 3px 12px rgba(2,6,23,0.04); display:flex; flex-direction:column}
+    .card img{width:100%; height:160px; object-fit:cover; border-radius:8px}
+    .card h3{margin:10px 0 6px; font-size:1rem}
+    .price{font-weight:700}
+    .card .actions{margin-top:auto; display:flex; gap:8px}
+
+    /* Cart drawer */
+    .cart-drawer{position:fixed; right:0; top:0; height:100vh; width:360px; background:white; box-shadow:-12px 0 24px rgba(2,6,23,0.12); transform:translateX(110%); transition:transform .25s ease; z-index:60; padding:18px; display:flex; flex-direction:column}
+    .cart-drawer.open{transform:translateX(0)}
+    .cart-list{flex:1; overflow:auto; margin:8px 0}
+    .cart-item{display:flex; gap:10px; margin-bottom:12px; align-items:center}
+    .cart-item img{width:64px; height:64px; object-fit:cover; border-radius:8px}
+    .qty{display:flex; gap:6px; align-items:center}
+    .footer{display:flex; gap:10px; align-items:center}
+
+    /* Footer */
+    footer{margin-top:28px; padding:18px 0; text-align:center; color:var(--muted)}
+
+    /* Responsive */
+    @media (max-width:900px){
+      .hero{grid-template-columns:1fr;}
+      .cart-drawer{width:100%;}
+    }
+  </style>
+</head>
+<body>
+  <!-- Pantalla de bienvenida -->
+  <div id="welcome" class="welcome-screen">
+    <img src="https://wallpapers-clan.com/wp-content/uploads/2025/01/naruto-uzumaki-four-tails-rage-mode-gif-desktop-wallpaper-preview.gif" alt="Bienvenida" />
+    <button id="enter-btn">Entrar</button>
+  </div>
+
+  <header id="main-header" style="display:none">
+    <div class="nav">
+      <div class="brand">MiTienda</div>
+      <nav>
+        <a href="#productos" class="btn-ghost">Productos</a>
+        <a href="#nosotros" class="btn-ghost">Nosotros</a>
+        <a href="#contacto" class="btn-ghost">Contacto</a>
+        <button id="open-cart" class="btn" title="Abrir carrito">Carrito (<span id="cart-count">0</span>)</button>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main-content" class="container" style="display:none">
+    <section class="hero">
+      <div class="hero-card">
+        <h1>Bienvenido a MiTienda</h1>
+        <p>Compra productos seleccionados con envío rápido. Explora nuestras categorías y agrega lo que más te guste al carrito.</p>
+        <div class="search">
+          <input id="search" placeholder="Buscar productos..." />
+          <button id="clear-search" class="btn-ghost">Limpiar</button>
+        </div>
+      </div>
+      <aside class="product-sidebar">
+        <div style="background:white;padding:14px;border-radius:12px; box-shadow:0 4px 16px rgba(2,6,23,0.04)">
+          <h3>Resumen</h3>
+          <p style="color:var(--muted)">Ofertas del día, envíos gratuitos desde $50.</p>
+          <hr style="border:none;border-top:1px solid #eef2f7;margin:12px 0">
+          <div style="display:flex;gap:8px">
+            <button id="filter-all" class="btn">Todos</button>
+            <button data-cat="accesorios" class="btn-ghost">Accesorios</button>
+            <button data-cat="ropa" class="btn-ghost">Ropa</button>
+          </div>
+        </div>
+      </aside>
+    </section>
+
+    <section id="productos" class="sections">
+      <div class="products">
+        <h2>Productos</h2>
+        <div id="products-grid" class="grid"></div>
+      </div>
+
+      <div id="nosotros" style="background:white;padding:18px;border-radius:12px">
+        <h2>Sobre nosotros</h2>
+        <p style="color:var(--muted)">Somos una tienda demostración creada para mostrar un ejemplo de e-commerce con HTML, CSS y JavaScript puro. Puedes personalizarla como desees.</p>
+      </div>
+
+      <div id="contacto" style="background:white;padding:18px;border-radius:12px">
+        <h2>Contáctanos</h2>
+        <form id="contact-form">
+          <div style="display:flex;flex-direction:column;gap:8px;max-width:480px">
+            <input placeholder="Nombre" required />
+            <input placeholder="Correo" type="email" required />
+            <textarea placeholder="Mensaje" rows="4"></textarea>
+            <button type="submit" class="btn">Enviar</button>
+          </div>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <div id="cart" class="cart-drawer" aria-hidden="true">
+    <h3>Tu carrito</h3>
+    <div id="cart-list" class="cart-list"></div>
+    <div class="footer">
+      <div style="flex:1">
+        <div style="color:var(--muted)">Total:</div>
+        <div id="cart-total" style="font-weight:700;font-size:1.1rem">$0.00</div>
+      </div>
+      <div>
+        <button id="checkout" class="btn">Pagar</button>
+      </div>
+    </div>
+    <button id="close-cart" class="btn-ghost" style="margin-top:12px">Cerrar</button>
+  </div>
+
+  <footer id="main-footer" style="display:none">
+    <div class="container">© <span id="year"></span> MiTienda — Demo creada con ❤️</div>
+  </footer>
+
+  <script>
+    // Pantalla de bienvenida
+    const welcome = document.getElementById('welcome');
+    const enterBtn = document.getElementById('enter-btn');
+    enterBtn.addEventListener('click', ()=>{
+      welcome.style.opacity = '0';
+      setTimeout(()=>{
+        welcome.style.display = 'none';
+        document.getElementById('main-header').style.display = 'block';
+        document.getElementById('main-content').style.display = 'block';
+        document.getElementById('main-footer').style.display = 'block';
+      }, 600);
+    });
+
+    // Datos de ejemplo
+    const products = [
+      {id:1, title:'Auriculares inalámbricos', price:39.99, category:'accesorios', img:'https://images.unsplash.com/photo-1518441902119-8fa0c89f9f3c?q=80&w=800&auto=format&fit=crop&crop=faces'},
+      {id:2, title:'Camiseta clásica', price:19.99, category:'ropa', img:'https://images.unsplash.com/photo-1520975923310-57a59f5b7b1b?q=80&w=800&auto=format&fit=crop&crop=faces'},
+      {id:3, title:'Mochila urbana', price:59.95, category:'accesorios', img:'https://images.unsplash.com/photo-1536305030016-13a6fb1b5b8e?q=80&w=800&auto=format&fit=crop&crop=faces'},
+      {id:4, title:'Sudadera con capucha', price:34.5, category:'ropa', img:'https://images.unsplash.com/photo-1530331722469-5d7b4d65a3f6?q=80&w=800&auto=format&fit=crop&crop=faces'}
+    ];
+
+    let cart = JSON.parse(localStorage.getItem('cart_v1') || '[]');
+    const $ = sel => document.querySelector(sel);
+    function formatPrice(v){ return '$' + v.toFixed(2); }
+
+    function renderProducts(list=products){
+      const grid = $('#products-grid'); grid.innerHTML = '';
+      list.forEach(p => {
+        const card = document.createElement('div'); card.className='card';
+        card.innerHTML = `
+          <img src="${p.img}" alt="${p.title}">
+          <h3>${p.title}</h3>
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <div class="price">${formatPrice(p.price)}</div>
+            <div style="color:var(--muted);font-size:0.9rem">${p.category}</div>
+          </div>
+          <div class="actions">
+            <button data-id="${p.id}" class="btn">Agregar</button>
+            <button data-view="${p.id}" class="btn-ghost">Ver</button>
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+    }
+
+    function saveCart(){ localStorage.setItem('cart_v1', JSON.stringify(cart)); }
+    function updateCartCount(){ $('#cart-count').textContent = cart.reduce((s,i)=>s+i.qty,0); }
+    function calculateTotal(){ return cart.reduce((s,i)=>s + i.qty * i.price, 0); }
+
+    function renderCart(){
+      const list = $('#cart-list'); list.innerHTML='';
+      if(cart.length===0){ list.innerHTML = '<div style="color:var(--muted)">Tu carrito está vacío</div>'; }
+      cart.forEach(item => {
+        const it = document.createElement('div'); it.className='cart-item';
+        it.innerHTML = `
+          <img src="${item.img}" alt="${item.title}">
+          <div style="flex:1">
+            <div style="font-weight:700">${item.title}</div>
+            <div style="color:var(--muted);font-size:0.9rem">${formatPrice(item.price)}</div>
+            <div class="qty" style="margin-top:6px">
+              <button data-dec="${item.id}" class="btn-ghost">-</button>
+              <div>${item.qty}</div>
+              <button data-inc="${item.id}" class="btn-ghost">+</button>
+              <button data-rem="${item.id}" class="btn-ghost" style="margin-left:8px">Eliminar</button>
+            </div>
+          </div>
+        `;
+        list.appendChild(it);
+      });
+      $('#cart-total').textContent = formatPrice(calculateTotal());
+      updateCartCount();
+      saveCart();
+    }
+
+    function addToCart(id){
+      const p = products.find(x=>x.id===id); if(!p) return;
+      const exists = cart.find(i=>i.id===id);
+      if(exists) exists.qty += 1; else cart.push({...p, qty:1});
+      renderCart();
+    }
+
+    function changeQty(id, delta){
+      const idx = cart.findIndex(i=>i.id===id); if(idx===-1) return;
+      cart[idx].qty += delta;
+      if(cart[idx].qty <= 0) cart.splice(idx,1);
+      renderCart();
+    }
+
+    function removeFromCart(id){ cart = cart.filter(i=>i.id!==id); renderCart(); }
+
+    document.addEventListener('click', (e)=>{
+      const target = e.target;
+      if(target.matches('[data-id]')){ addToCart(Number(target.dataset.id)); }
+      if(target.matches('[data-inc]')){ changeQty(Number(target.dataset.inc), 1); }
+      if(target.matches('[data-dec]')){ changeQty(Number(target.dataset.dec), -1); }
+      if(target.matches('[data-rem]')){ removeFromCart(Number(target.dataset.rem)); }
+      if(target.id === 'open-cart'){ $('#cart').classList.add('open'); }
+      if(target.id === 'close-cart'){ $('#cart').classList.remove('open'); }
+      if(target.id === 'filter-all'){ renderProducts(); }
+      if(target.matches('[data-cat]')){ const c = target.dataset.cat; renderProducts(products.filter(p=>p.category===c)); }
+    });
+
+    $('#search').addEventListener('input', (e)=>{
+      const q = e.target.value.trim().toLowerCase();
+      if(!q) return renderProducts();
+      renderProducts(products.filter(p=> p.title.toLowerCase().includes(q) || p.category.toLowerCase().includes(q)));
+    });
+    $('#clear-search').addEventListener('click', ()=>{ $('#search').value=''; renderProducts(); });
+
+    $('#checkout').addEventListener('click', ()=>{
+      if(cart.length===0){ alert('Tu carrito está vacío.'); return; }
+      const total = formatPrice(calculateTotal());
+      const confirmed = confirm(`Pagar ${total}? (Demo)`);
+      if(confirmed){ cart = []; saveCart(); renderCart(); alert('¡Gracias por tu compra!'); $('#cart').
