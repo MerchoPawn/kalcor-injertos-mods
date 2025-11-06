@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kalcor | SAMP Mods</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background: #0a0a0a;
+      color: #fff;
+      overflow-x: hidden;
+    }
+
+    /* === PORTADA === */
+    .portada {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 100vh;
+      width: 100%;
+      background: url('https://img.freepik.com/free-vector/gradient-samurai-dawn-background_23-2149050331.jpg?semt=ais_hybrid&w=740&q=80') center/cover no-repeat;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      text-align: center;
+      z-index: 100;
+      transition: opacity 1.2s ease, visibility 1.2s ease;
+    }
+
+    .portada::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.6);
+      z-index: 1;
+    }
+
+    .portada h1 {
+      font-size: 3rem;
+      color: #00ffcc;
+      text-shadow: 0 0 20px #00ffcc;
+      z-index: 2;
+      animation: fadeIn 2s ease;
+    }
+
+    .portada p {
+      color: #ccc;
+      font-size: 1.2rem;
+      margin-top: 15px;
+      z-index: 2;
+      animation: fadeIn 2.5s ease;
+    }
+
+    .boton-entrar {
+      margin-top: 40px;
+      padding: 15px 40px;
+      b
