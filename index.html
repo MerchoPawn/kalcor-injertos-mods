@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tienda Injertos Mods</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: Arial, sans-serif;
+      background: url('https://i.ytimg.com/vi/-uTHvdtCVJ0/maxresdefault.jpg') center center/cover no-repeat fixed;
+      color: #fff;
+    }
+    header {
+      background: rgba(0,0,0,0.85);
+      color: #fff;
+      padding: 15px 0;
+      text-align: center;
+    }
+    nav a {
+      color: #fff;
+      margin: 0 15px;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    .hero {
+      text-align: center;
+      padding: 80px 20px;
+      background: rgba(0,0,0,0.7);
+      color: white;
+    }
+    .productos {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px,1fr));
+      gap: 20px;
+      padding: 40px;
+    }
+    .producto {
+      background: rgba(255,255,255,0.1);
+      border-radius:10px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.4);
+      padding:20px;
+      text-align:center;
+      backdrop-filter: blur(5px);
+    }
+    .producto img {
+      width:100%;
+      height:200px;
+      object-fit:cover;
+      border-radius:10px;
+    }
+    footer {
+      background: rgba(0,0,0,0.85);
+      color:#fff;
+      text-align:center;
+      padding:20px 0;
+    }
+
+    /* Bienvenida */
+    #welcome {
+      position: fixed;
+      top:0;
+      left:0;
+      width:100%;
+      height:100vh;
+      background: url('https://i.ytimg.com/vi/-uTHvdtCVJ0/maxresdefault.jpg') center center/cover no-repeat;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      z-index:9999;
+      flex-direction:column;
+    }
+    #welcome button {
+      background: black;
+      color:white;
+      font-size:1.5rem;
+      padding:15px 40px;
+      border:none;
+      border-radius:8px;
+      cursor:pointer;
+      box-shadow:0 0 20px 2px white;
+      transition: all 0.3s ease;
+      animation: glow 2s infinite alternate;
+      margin-top:20px;
+    }
+    #welcome button:hover {
+      transform: scale(1.1);
+      box-shadow:0 0 35px 10px white;
+    }
+    @keyframes glow {
+      from { box-shadow: 0 0 15px 2px #999; }
+      to { box-shadow: 0 0 35px 8px white; }
+    }
+    #welcome.fade-out {
+      opacity:0;
+      transition: opacity 1s ease-out;
+      pointer-events:none;
+    }
+
+    .equipo {
+      padding:50px 20px;
+      text-align:center;
+      background: rgba(0,0,0,0.7);
+    }
+    .equipo h2 {
+      font-size:2rem;
+      margin-bottom:30px;
+    }
+    .miembros {
+      display:flex;
+      flex-wrap:wrap;
+      justify-content:center;
+      gap:30px;
+    }
+    .miembro {
+      text-align:center;
+      width:200px;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .miembro img {
+      width:150px;
+      height:150px;
+      border-radius:50%;
+      object-fit:cover;
+      border:3px solid #fff;
+      margin-bottom:10px;
+      transition: 0.3s;
+    }
+    .miembro:hover img {
+      box-shadow:0 0 20px 5px white;
+      transform: scale(1.1);
+    }
+    .discord {
+      padding:50px 20px;
+      text-align:center;
+      background: rgba(0,0,0,0.8);
+      color:white;
+    }
+    .discord a {
+      background:#5865F2;
+      color:white;
+      padding:15px 30px;
+      border-radius:8px;
+      text-decoration:none;
+      font-weight:bold;
+      transition:0.3s;
+    }
+    .discord a:hover {
+      background:#4752C4;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- PANTALLA DE BIENVENIDA -->
+  <div id="welcome">
+    <button id="enter-btn">Entrar</button>
+  </div>
+
+  <header>
+    <h1>Tienda Injertos Mods</h1>
+    <nav>
+      <a href="#productos">Ventas</a>
+      <a href="#equipo">Nuestro Equipo</a>
+      <a href="#discord">Discord</a>
+    </nav>
+  </header>
+
+  <section id="productos" class="hero">
+    <h2>Bienvenido A La Tienda De Injertos Mods</h2>
+    <p>Explora Nuestros Mods Y Aportes Unicos</p>
+  </section>
+
+  <section class="productos">
+    <!-- 10 espacios para productos -->
+    <div class="producto"><img src="https://media.discordapp.net/attachments/1413313283309703189/1432491863209939096/sa-mp-019.png?ex=690d1d02&is=690bcb82&hm=1d965fdcf9db860deb8216933bebb54a199977a71c90820e08c707684a1bc7a9&=&format=webp&quality=lossless&width=1201&height=676"><h3>Aporte Fps Up</h3><p>$100.000</p></div>
+    <div class="producto"><img src="https://media.discordapp.net/attachments/1413313283309703189/1418057466310168596/sa-mp-000.png?ex=690d55ee&is=690c046e&hm=9c13cc5220ee3e836daede1d02ccdd1b5cd8fbaec76bc33d3185aa6a8c72800a&=&format=webp&quality=lossless&width=1082&height=676"><h3>Aporte Demero</h3><p>$100</p></div>
+    <div class="producto"><img src="https://media.discordapp.net/attachments/1413313283309703189/1415825409227886713/sa-mp-014.png?ex=690d202a&is=690bceaa&hm=e7a95c2ce8f7c6f18441a56f79fecb9ded63fb00b1aca92f70b753d17b8c4084&=&format=webp&quality=lossless&width=1201&height=676"><h3>Aporte Nemo</h3><p>$150</p></div>
+    <div class="producto"><img src="https://media.discordapp.net/attachments/1413313283309703189/1414890069147521125/sa-mp-018.png?ex=690d04cf&is=690bb34f&hm=6ed559e91dff1e1a7e7697edd1cec7c2c279239b92cd5a177b0e069bad7c1dac&=&format=webp&quality=lossless&width=901&height=676"><h3>Aporte Feo</h3><p>$1</p></div>
+    <div class="producto"><img src="https://media.discordapp.net/attachments/1413313283309703189/1414835182002896956/sa-mp-009.png?ex=690cd1b1&is=690b8031&hm=830a98a329b37e600dd4b8bfa4c71a15445dc79d48cdadcc98430f61895391aa&=&format=webp&quality=lossless&width=1202&height=676"><h3>Aporte Periodo Mujer</h3><p>$250</p></div>
+    <div class="producto"><img src="https://media.discordapp.net/attachments/1413313283309703189/1414522089611984948/sa-mp-049.png?ex=690cff9a&is=690bae1a&hm=0f167f1b2cf7bf58d738922b40be6cb3bc13d7c4c114c62d5d79cc3890846591&=&format=webp&quality=lossless&width=1082&height=676"><h3>Aporte Negro Del Whatsapp</h3><p>$300</p></div>
+    <div class="producto"><img src="https://media.discordapp.net/attachments/1413313283309703189/1413387192142663802/sa-mp-011.png?ex=690cd326&is=690b81a6&hm=96a0d087d776047384b706ef48973c7445b0fff9af810936a44ae68b5df17906&=&format=webp&quality=lossless&width=1082&height=676"><h3>Aporte Bonito Pero Feo</h3><p>$2</p></div>
+    <div class="producto"><img src="https://picsum.photos/300/200?random=8"><h3>Producto 8</h3><p>$40.00</p></div>
+    <div class="producto"><img src="https://picsum.photos/300/200?random=9"><h3>Producto 9</h3><p>$45.00</p></div>
+    <div class="producto"><img src="https://picsum.photos/300/200?random=10"><h3>Producto 10</h3><p>$50.00</p></div>
+  </section>
+
+  <section id="equipo" class="equipo">
+    <h2>DUEÑOS</h2>
+    <div class="miembros">
+      <div class="miembro"><img src="https://images-ext-1.discordapp.net/external/ynbXltmh53vnyfW1ksY6Y-nmqHVSE_i4x3pjXILqNTQ/%3Fsize%3D1024/https/cdn.discordapp.com/avatars/1354865570880946176/a6e7ce488b0c3a8856e69184638319bb.png?format=webp&quality=lossless"><h3>Kalcor</h3></div>
+      <div class="miembro"><img src="https://images-ext-1.discordapp.net/external/mvgWa3gAaG_BbwsHzBZh5ozY-r4SQdjH1np8E8H9b4A/%3Fsize%3D1024/https/cdn.discordapp.com/avatars/1414075135350280234/efcb92d7cccb4f6da746f47b1441dc65.png?format=webp&quality=lossless"><h3>Manzer</h3></div>
+      <div class="miembro"><img src="https://images-ext-1.discordapp.net/external/mjILml0zIL5P-CFIILgvI4T-n_v38JONLGj6bVv_Gfs/%3Fsize%3D1024/https/cdn.discordapp.com/avatars/1221849688593137830/ccbeb578b68bd02a4b19dc1ddd506842.png?format=webp&quality=lossless&width=780&height=780"><h3>Jacob</h3></div>
+      <div class="miembro"><img src="https://images-ext-1.discordapp.net/external/6GnUGKN0qyhcZ2kye74XbYOsvNK6A47AiipqPOi1nqw/%3Fsize%3D1024/https/cdn.discordapp.com/guilds/1387892493860999319/users/1298301131641983019/avatars/a_1e3d8f261e5560ab8bec9d9277b77f0d.gif"><h3>Hilnzo</h3></div>
+      <div class="miembro"><img src="https://images-ext-1.discordapp.net/external/yIUfnShREDUwGqApB0Gu-B1OAVm3Encz2SjtqwWGCO8/%3Fsize%3D1024/https/cdn.discordapp.com/avatars/1246355878840631327/5a14e4c676a423d04acda0ff29bd225e.png?format=webp&quality=lossless"><h3>Kairox</h3></div>
+    </div>
+  </section>
+
+  <section id="discord" class="discord">
+    <h2>Discord Injertos Mods</h2>
+    <p>                                                             </p>
+    
+    <a href="https://discord.gg/W3zan8fpSG" target="_blank">Entrar Al Discord</a>
+  </section>
+
+  <footer>
+    <p>@ Tienda Injertos Mods Oficial</p>
+  </footer>
+
+  <!-- Música en bucle -->
+  <audio id="bgm" src="https://files.catbox.moe/ikc7rj.mp3" loop></audio>
+
+  <script>
+    const enterBtn = document.getElementById('enter-btn');
+    const welcome = document.getElementById('welcome');
+    const bgm = document.getElementById('bgm');
+
+    enterBtn.addEventListener('click', () => {
+      welcome.classList.add('fade-out');
+      bgm.play().catch(err => console.warn('Autoplay bloqueado:', err));
+      setTimeout(() => {
+        welcome.style.display = 'none';
+        document.getElementById('productos').scrollIntoView({ behavior: 'smooth' });
+      }, 1000);
+    });
+  </script>
+</body>
+</html>
