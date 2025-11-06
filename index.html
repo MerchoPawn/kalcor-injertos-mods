@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Página de SAMP</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        /* Página de bienvenida */
+        #welcome {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: url('https://motionbgs.com/media/4808/gundam-ninja.jpg') no-repeat center center/cover;
+            flex-direction: column;
+            color: white;
+            text-align: center;
+        }
+
+        #welcome button {
+            padding: 15px 30px;
+            font-size: 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            background-color: #1abc9c;
+            color: white;
+            margin-top: 20px;
+        }
+
+        /* Menú principal */
+        #main {
+            display: none;
+            padding: 20px;
+        }
+
+        header {
+            display: flex;
+            justify-content: flex-end;
+            background-color: #333;
+            padding: 10px 20px;
+        }
+
+        header a {
+            text-decoration: none;
+            color: white;
+            background-color: #7289da;
+            padding: 10px 20px;
+            border-radius: 5px;
+        }
+
+        .content {
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        .content img {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+        }
+
+        .content p {
+            margin-top: 20px;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Página de bienvenida -->
+    <div id="welcome">
+        <h1>Bienvenido a mi página de SAMP</h1>
+        <button onclick="entrar()">Entrar</button>
+    </div>
+
+    <!-- Menú principal -->
+    <div id="main">
+        <header>
+            <a href="https://discord.gg/W3zan8fpSG" target="_blank">Discord</a>
+        </header>
+        <div class="content">
+            <img src="https://i.pinimg.com/originals/02/d4/4f/02d44f6968d2751ec6bce152dfefd8ee.jpg" alt="Kalcor">
+            <p> INJERTOS MODS - SAMP.</p>
+        </div>
+    </div>
+
+    <script>
+        function entrar() {
+            document.getElementById('welcome').style.display = 'none';
+            document.getElementById('main').style.display = 'block';
+        }
+    </script>
+
+</body>
+</html>
