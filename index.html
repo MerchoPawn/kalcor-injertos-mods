@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Tienda Injertos Mods</title>
+  <style>
+    :root{ --accent:#ff3b3b; --light:#ffffff; --overlay:rgba(0,0,0,0.25); }
+    *{box-sizing:border-box;scrollbar-width:none;}
+    body{
+      font-family:Inter, Arial, Helvetica, sans-serif;
+      margin:0; color:var(--light);
+      background:url('https://cdn-images.dzcdn.net/images/cover/0b6b4ff81c0958f882c5fa5a0f88cdc1/0x1900-000000-80-0-0.jpg') center/cover fixed no-repeat;
+      overflow-x:hidden;
+    }
+    ::-webkit-scrollbar{display:none;}
+    .page-overlay{position:fixed;inset:0;background:var(--overlay);pointer-events:none;z-index:0}
+
+    header{
+      position:relative;z-index:30;
+      display:flex;align-items:center;justify-content:space-between;
+      padding:18px 32px;background:rgba(0,0,0,0.55)
+    }
+    header h1{font-size:20px;letter-spacing:1px;margin:0}
+    nav a{
+      color:var(--light);text-decoration:none;font-weight:600;
+      padding:8px 12px;border-radius:8px;transition:all .25s
+    }
+    nav a:hover{box-shadow:0 0 18px var(--accent),0 0 30px rgba(255,59,59,0.25)}
+
+    /* Welcome */
+    #welcome{
+      position:fixed;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;
+      z-index:50;background:rgba(0,0,0,0.35)
+    }
+    #welcome::before{content:'';position:absolute;inset:0;background:rgba(0,0,0,0.45)}
+    #enterBtn{
+      position:relative;z-index:2;background:#000;color:#fff;border:0;
+      padding:14px 36px;border-radius:10px;cursor:pointer;font-size:18px;
+      box-shadow:0 0 16px rgba(255,255,255,0.08);animation:glow 2s infinite alternate
+    }
+    @keyframes glow{
+      from{box-shadow:0 0 10px 2px rgba(255,59,59,0.1)}
+      to{box-shadow:0 0 25px 10px rgba(255,59,59,0.4)}
+    }
+    #welcome.fade{opacity:0;transition:opacity .8s ease;pointer-events:none}
+
+    /* Team bar: centered on wide screens, horizontal scroll when necessary */
+    .team-bar{
+      position:fixed;top:70px;left:0;right:0;margin:0 auto;z-index:40;
+      display:flex;flex-direction:row;gap:18px;
+      overflow-x:auto;overflow-y:hidden;
+      padding:12px 18px;background:rgba(0,0,0,0.55);
+      backdrop-filter:blur(6px);
+      scrollbar-width:none;
+      justify-content:center; /* center items when they fit */
+      transition:transform .35s ease,opacity .35s ease;
+      max-width:1400px;
+      left:50%;
+      transform:translateX(-50%);
+    }
+    /* when hidden (initial or when scrolling down) */
+    .team-bar.hidden{
+      transform:translate(-50%, -120%);
+      opacity:0;
+    }
+    .team-bar::-webkit-scrollbar{display:none;}
+
+    .team-member{
+      flex:0 0 auto;display:flex;flex-direction:column;align-items:center;
+      background:rgba(255,255,255,0.04);padding:10px 12px;border-radius:12px;
+      backdrop-filter:blur(4px);transition:transform .25s,box-shadow .25s,border .25s;
+      position:relative;
+      min-width:110px;
+    }
+    .team-member img{
+      width:90px;height:90px;border-radius:50%;object-fit:cover;
+      border:3px solid rgba(255,255,255,0.12);
+      transition:transform .25s,box-shadow .25s,border .25s;
+      background:#222;
+    }
+    .team-member:hover img{
+      transform:scale(1.08);
+      border-color:var(--accent);
+      box-shadow:0 0 18px 6px rgba(255,59,59,0.3)
+    }
+    .team-member .name{
+      font-size:0.95rem;font-weight:600;margin-top:6px;color:var(--light);
+      transition:color .3s,text-shadow .3s;
+      white-space:nowrap;
+    }
+    .team-member:hover .name{
+      color:var(--accent);
+      text-shadow:0 0 8px rgba(255,59,59,0.7),0 0 15px rgba(255,59,59,0.4);
+    }
+    .team-member .role{
+      opacity:0;transition:opacity .3s ease;margin-top:4px;font-size:0.8rem;
+      color:#ccc;text-shadow:0 0 8px rgba(255,59,59,0.5);
+      white-space:nowrap;
+    }
+    .team-member:hover .role{
+      opacity:1;color:var(--accent);
+    }
+
+    /* Main content area */
+    .main{position:relative;z-index:20;padding:180px 32px 80px;min-height:100vh;display:none;max-width:1400px;margin:0 auto;}
+
+    /* Products */
+    #productos{margin:0 auto}
+    #productos h2{font-size:28px;margin-bottom:18px;text-shadow:0 0 8px rgba(0,0,0,0.6)}
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(5, 1fr); /* show 5 per row on wide screens */
+      gap:20px;
+    }
+    .card{
+      background:rgba(255,255,255,0.04);border-radius:12px;padding:12px;
+      height:240px;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;
+      transition:transform .25s,box-shadow .25s,border .25s;
+      min-width:160px;
+    }
+    .card img{
+      width:140px;height:140px;object-fit:cover;border-radius:8px;margin-bottom:10px;
+      background:#222;
+    }
+    .card:hover{
+      transform:translateY(-6px);box-shadow:0 0 28px 6px rgba(255,59,59,0.3);
+      border:1px solid var(--accent);
+    }
+    .card p{text-align:center;font-size:14px;color:var(--light);padding:0 6px}
+
+    #musicBtn{
+      position:fixed;right:18px;bottom:18px;width:60px;height:60px;
+      border-radius:50%;background:rgba(0,0,0,0.6);
+      border:2px solid rgba(255,255,255,0.12);
+      display:flex;align-items:center;justify-content:center;
+      cursor:pointer;z-index:60;box-shadow:0 0 14px rgba(255,59,59,0.2);
+      transition:all .3s;
+    }
+    #musicBtn:hover{box-shadow:0 0 25px 8px rgba(255,59,59,0.4);border-color:var(--accent);}
+
+    /* Responsive */
+    @media (max-width:1200px){
+      .grid{grid-template-columns:repeat(4,1fr)}
+    }
+    @media (max-width:900px){
+      .grid{grid-template-columns:repeat(2,1fr)}
+      .team-bar{max-width:100%;left:0;transform:none;justify-content:flex-start}
+      .team-bar.hidden{transform:translateY(-160%);opacity:0}
+      .main{padding:220px 20px 80px}
+    }
+    @media (max-width:480px){
+      .grid{grid-template-columns:repeat(1,1fr)}
+      .team-member img{width:70px;height:70px}
+      .team-member{min-width:90px}
+      .main{padding-top:260px}
+    }
+  </style>
+</head>
+<body>
+  <div class="page-overlay"></div>
+
+  <div id="welcome">
+    <button id="enterBtn">Entrar</button>
+  </div>
+
+  <header>
+    <h1>Tienda Injertos Mods</h1>
+    <nav><a href="https://discord.gg/W3zan8fpSG" target="_blank">Discord</a></nav>
+  </header>
+
+  <!-- Barra del equipo (oculta hasta Entrar) -->
+  <aside class="team-bar hidden" id="teamBar">
+    <!-- 8 miembros en orden pedido (Maik antes de David, Sylver al final) -->
+    <div class="team-member">
+      <img src="https://cdn.discordapp.com/avatars/1354865570880946176/a6e7ce488b0c3a8856e69184638319bb.webp?size=1024" alt="Kalcor">
+      <div class="name">Kalcor</div>
+      <div class="role">Owner</div>
+    </div>
+
+    <div class="team-member">
+      <!-- Manzer nueva imagen (proporcionada) -->
+      <img src="https://images-ext-1.discordapp.net/external/BTE7i3QbFUqpeFjvi5CsbL-IISthPMSsj3XGZMpr0xo/%3Fsize%3D1024/https/cdn.discordapp.com/avatars/1414075135350280234/8a3280e88a6cfce972fe12ad13780d0f.png?format=webp&quality=lossless" alt="Manzer">
+      <div class="name">Manzer</div>
+      <div class="role">Owner</div>
+    </div>
+
+    <div class="team-member">
+      <img src="https://cdn.discordapp.com/avatars/1221849688593137830/ccbeb578b68bd02a4b19dc1ddd506842.webp?size=1024" alt="Jacob">
+      <div class="name">Jacob</div>
+      <div class="role">Owner</div>
+    </div>
+
+    <div class="team-member">
+      <!-- Hilnzo nueva imagen GIF (proporcionada) -->
+      <img src="https://images-ext-1.discordapp.net/external/6GnUGKN0qyhcZ2kye74XbYOsvNK6A47AiipqPOi1nqw/%3Fsize%3D1024/https/cdn.discordapp.com/guilds/1387892493860999319/users/1298301131641983019/avatars/a_1e3d8f261e5560ab8bec9d9277b77f0d.gif" alt="Hilnzo">
+      <div class="name">Hilnzo</div>
+      <div class="role">Owner</div>
+    </div>
+
+    <div class="team-member">
+      <img src="https://cdn.discordapp.com/avatars/1246355878840631327/5a14e4c676a423d04acda0ff29bd225e.webp?size=1024" alt="Kairox">
+      <div class="name">Kairox</div>
+      <div class="role">Kabraso</div>
+    </div>
+
+    <div class="team-member">
+      <img src="https://cdn.discordapp.com/avatars/1260353622001188875/aa9c8431623d1958d02e42f4f026efe3.webp?size=1024" alt="Maik">
+      <div class="name">Maik</div>
+      <div class="role">Owner</div>
+    </div>
+
+    <div class="team-member">
+      <img src="https://cdn.discordapp.com/avatars/1386421165052002366/2fab2aba0968175b3d8e52253a025c5d.webp?size=1024" alt="David">
+      <div class="name">David</div>
+      <div class="role">Sub Encargado</div>
+    </div>
+
+    <div class="team-member">
+      <img src="https://cdn.discordapp.com/avatars/1297359221280739389/0c8e21345db6f35f607546e0dcbf4295.webp?size=1024" alt="Sylver">
+      <div class="name">Sylver</div>
+      <div class="role">Sub Encargado</div>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <div class="main" id="main">
+    <section id="productos">
+      <h2>Productos</h2>
+      <div class="grid" id="gridProducts">
+        <!-- 10 productos con imágenes tipo realista (picsum seeded) -->
+        <div class="card"><img src="https://picsum.photos/seed/gta1/400/400" alt="p1"><p>GTA SA - Producto 1</p></div>
+        <div class="card"><img src="https://picsum.photos/seed/gta2/400/400" alt="p2"><p>GTA SA - Producto 2</p></div>
+        <div class="card"><img src="https://picsum.photos/seed/gta3/400/400" alt="p3"><p>GTA SA - Producto 3</p></div>
+        <div class="card"><img src="https://picsum.photos/seed/gta4/400/400" alt="p4"><p>GTA SA - Producto 4</p></div>
+        <div class="card"><img src="https://picsum.photos/seed/gta5/400/400" alt="p5"><p>GTA SA - Producto 5</p></div>
+        <div class="card"><img src="https://picsum.photos/seed/gta6/400/400" alt="p6"><p>GTA SA - Producto 6</p></div>
+        <div class="card"><img src="https://picsum.photos/seed/gta7/400/400" alt="p7"><p>GTA SA - Producto 7</p></div>
+        <div class="card"><img src="https://picsum.photos/seed/gta8/400/400" alt="p8"><p>GTA SA - Producto 8</p></div>
+        <div class="card"><img src="https://picsum.photos/seed/gta9/400/400" alt="p9"><p>GTA SA - Producto 9</p></div>
+        <div class="card"><img src="https://picsum.photos/seed/gta10/400/400" alt="p10"><p>GTA SA - Producto 10</p></div>
+      </div>
+    </section>
+  </div>
+
+  <!-- Audio + controls -->
+  <audio id="bgm" src="https://files.catbox.moe/ikc7rj.mp3" loop></audio>
+  <div id="musicBtn" title="Pausar / Reanudar">🔊</div>
+
+  <script>
+    // Elements
+    const enterBtn = document.getElementById('enterBtn');
+    const welcome = document.getElementById('welcome');
+    const main = document.getElementById('main');
+    const bgm = document.getElementById('bgm');
+    const musicBtn = document.getElementById('musicBtn');
+    const teamBar = document.getElementById('teamBar');
+    let playing = false;
+    let lastScroll = 0;
+
+    // Show main and team bar after clicking Entrar
+    enterBtn.addEventListener('click', () => {
+      welcome.classList.add('fade');
+      setTimeout(() => {
+        welcome.style.display = 'none';
+        main.style.display = 'block';
+        teamBar.classList.remove('hidden'); // show bar
+      }, 900);
+
+      bgm.play().then(()=>{ playing = true; musicBtn.textContent = '🔊'; }).catch(()=>{});
+    });
+
+    // Music toggle
+    musicBtn.addEventListener('click', ()=>{
+      if(playing){ bgm.pause(); playing=false; musicBtn.textContent='🔇'; }
+      else{ bgm.play().then(()=>{ playing=true; musicBtn.textContent='🔊'; }).catch(()=>{}); }
+    });
+
+    // Hide team bar when scrolling down, show when scrolling up (only after visible)
+    window.addEventListener('scroll', () => {
+      const currentScroll = window.scrollY;
+      if (currentScroll > lastScroll && currentScroll > 60) {
+        // scrolling down
+        teamBar.classList.add('hidden');
+      } else {
+        // scrolling up
+        if (!teamBar.classList.contains('hidden')) {
+          teamBar.classList.remove('hidden');
+        } else {
+          // if bar was hidden and user scrolls up near top, show it again
+          if (currentScroll < 120) teamBar.classList.remove('hidden');
+        }
+      }
+      lastScroll = currentScroll;
+    });
+
+    // Ensure main initially hidden
+    document.addEventListener('DOMContentLoaded', ()=>{ main.style.display='none'; });
+
+    // Improve horizontal scroll with mouse drag (desktop)
+    (function enableDragScroll(containerSelector) {
+      const el = document.querySelector(containerSelector);
+      if(!el) return;
+      let isDown = false, startX, scrollLeft;
+      el.addEventListener('mousedown', (e) => {
+        isDown = true;
+        el.classList.add('active-drag');
+        startX = e.pageX - el.offsetLeft;
+        scrollLeft = el.scrollLeft;
+      });
+      el.addEventListener('mouseleave', ()=>{ isDown = false; el.classList.remove('active-drag'); });
+      el.addEventListener('mouseup', ()=>{ isDown = false; el.classList.remove('active-drag'); });
+      el.addEventListener('mousemove', (e) => {
+        if(!isDown) return;
+        e.preventDefault();
+        const x = e.pageX - el.offsetLeft;
+        const walk = (x - startX) * 1; //scroll-fast
+        el.scrollLeft = scrollLeft - walk;
+      });
+    })('.team-bar');
+  </script>
+</body>
+</html>
