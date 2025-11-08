@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Tienda Injertos Mods</title>
+  <style>
+    :root{ --accent:#5865F2; --light:#ffffff; --overlay:rgba(0,0,0,0.25); }
+    *{box-sizing:border-box}
+    body{
+      font-family:Inter, Arial, Helvetica, sans-serif;
+      margin:0; color:var(--light);
+      background:url('https://cdn-images.dzcdn.net/images/cover/0b6b4ff81c0958f882c5fa5a0f88cdc1/0x1900-000000-80-0-0.jpg') center/cover fixed no-repeat;
+    }
+    .page-overlay{position:fixed;inset:0;background:var(--overlay);pointer-events:none;z-index:0}
+
+    header{
+      position:relative;z-index:30;
+      display:flex;align-items:center;justify-content:space-between;
+      padding:18px 32px;background:rgba(0,0,0,0.55)
+    }
+    header h1{font-size:20px;letter-spacing:1px;margin:0}
+    nav a{
+      color:var(--light);text-decoration:none;font-weight:600;
+      padding:8px 12px;border-radius:8px;transition:all .25s
+    }
+    nav a:hover{box-shadow:0 0 18px var(--accent),0 0 30px rgba(114,137,218,0.4)}
+
+    #welcome{
+      position:fixed;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;
+      z-index:50;background:rgba(0,0,0,0.35)
+      url('https://i.ytimg.com/vi/-uTHvdtCVJ0/maxresdefault.jpg') center/cover no-repeat
+    }
+    #welcome::before{content:'';position:absolute;inset:0;background:rgba(0,0,0,0.45)}
+    #enterBtn{
+      position:relative;z-index:2;background:#000;color:#fff;border:0;
+      padding:14px 36px;border-radius:10px;cursor:pointer;font-size:18px;
+      box-shadow:0 0 16px rgba(255,255,255,0.08);animation:glow 2s infinite alternate
+    }
+    @keyframes glow{
+      from{box-shadow:0 0 10px 2px rgba(255,255,255,0.06)}
+      to{box-shadow:0 0 30px 8px rgba(255,255,255,0.18)}
+    }
+    #welcome.fade{opacity:0;transition:opacity .8s ease;pointer-events:none}
+
+    /* Barra del equipo (vertical en PC) */
+    .team-bar{
+      position:fixed;left:18px;top:100px;width:200px;z-index:40;
+      display:flex;flex-direction:column;gap:18px;
+      transition:transform .35s ease,opacity .35s ease
+    }
+    .team-member{
+      display:flex;flex-direction:column;align-items:center;gap:8px;
+      background:rgba(255,255,255,0.03);padding:10px;border-radius:12px;
+      backdrop-filter:blur(4px);transition:transform .25s,box-shadow .25s
+    }
+    .team-member img{
+      width:96px;height:96px;border-radius:50%;object-fit:cover;
+      border:3px solid rgba(255,255,255,0.12);
+      transition:transform .25s,box-shadow .25s
+    }
+    .team-member:hover img{
+      transform:scale(1.08);box-shadow:0 0 18px 6px rgba(255,255,255,0.12)
+    }
+    .team-member .name{font-size:0.95rem;font-weight:600;color:var(--light)}
+
+    /* Contenido principal */
+    .main{position:relative;z-index:20;padding:40px 32px 80px 260px;min-height:100vh;transition:padding-left .35s}
+
+    /* Productos */
+    #productos{max-width:1200px;margin:0 auto}
+    #productos h2{font-size:28px;margin-bottom:18px;text-shadow:0 0 8px rgba(0,0,0,0.6)}
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+      gap:20px
+    }
+    .card{
+      background:rgba(255,255,255,0.04);border-radius:12px;padding:12px;
+      height:220px;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;
+      transition:transform .25s,box-shadow .25s
+    }
+    .card img{
+      width:120px;height:120px;object-fit:cover;border-radius:8px;margin-bottom:10px
+    }
+    .card:hover{
+      transform:translateY(-6px);box-shadow:0 0 28px 6px rgba(255,255,255,0.06)
+    }
+    .card p{text-align:center;font-size:14px;color:var(--light)}
+
+    #musicBtn{
+      position:fixed;right:18px;bottom:18px;width:60px;height:60px;
+      border-radius:50%;background:rgba(0,0,0,0.6);
+      border:2px solid rgba(255,255,255,0.12);
+      display:flex;align-items:center;justify-content:center;
+      cursor:pointer;z-index:60;box-shadow:0 0 14px rgba(255,255,255,0.05)
+    }
+
+    /* Vista móvil */
+    @media (max-width:900px){
+      .team-bar{
+        flex-direction:row;top:70px;left:0;width:100%;overflow-x:auto;
+        padding:10px;background:rgba(0,0,0,0.5);
+        backdrop-filter:blur(5px);
+      }
+      .team-member{min-width:100px;padding:8px}
+      .team-member img{width:70px;height:70px}
+      .main{padding-left:20px;padding-top:180px}
+    }
+  </style>
+</head>
+<body>
+  <div class="page-overlay"></div>
+
+  <div id="welcome">
+    <button id="enterBtn">Entrar</button>
+  </div>
+
+  <header>
+    <h1>Tienda Injertos Mods</h1>
+    <nav><a href="https://discord.gg/W3zan8fpSG" target="_blank">Discord</a></nav>
+  </header>
+
+  <!-- Barra del equipo -->
+  <aside class="team-bar" id="teamBar">
+    <div class="team-member"><img src="https://images-ext-1.discordapp.net/external/ynbXltmh53vnyfW1ksY6Y-nmqHVSE_i4x3pjXILqNTQ/%3Fsize%3D1024/https/cdn.discordapp.com/avatars/1354865570880946176/a6e7ce488b0c3a8856e69184638319bb.png?format=webp&quality=lossless" alt="Kalcor"><div class="name">Kalcor</div></div>
+    <div class="team-member"><img src="https://images-ext-1.discordapp.net/external/mvgWa3gAaG_BbwsHzBZh5ozY-r4SQdjH1np8E8H9b4A/%3Fsize%3D1024/https/cdn.discordapp.com/avatars/1414075135350280234/efcb92d7cccb4f6da746f47b1441dc65.png?format=webp&quality=lossless" alt="Manzer"><div class="name">Manzer</div></div>
+    <div class="team-member"><img src="https://images-ext-1.discordapp.net/external/mjILml0zIL5P-CFIILgvI4T-n_v38JONLGj6bVv_Gfs/%3Fsize%3D1024/https/cdn.discordapp.com/avatars/1221849688593137830/ccbeb578b68bd02a4b19dc1ddd506842.png?format=webp&quality=lossless&width=780&height=780" alt="Jacob"><div class="name">Jacob</div></div>
+    <div class="team-member"><img src="https://images-ext-1.discordapp.net/external/6GnUGKN0qyhcZ2kye74XbYOsvNK6A47AiipqPOi1nqw/%3Fsize%3D1024/https/cdn.discordapp.com/guilds/1387892493860999319/users/1298301131641983019/avatars/a_1e3d8f261e5560ab8bec9d9277b77f0d.gif" alt="Hilnzo"><div class="name">Hilnzo</div></div>
+    <div class="team-member"><img src="https://images-ext-1.discordapp.net/external/yIUfnShREDUwGqApB0Gu-B1OAVm3Encz2SjtqwWGCO8/%3Fsize%3D1024/https/cdn.discordapp.com/avatars/1246355878840631327/5a14e4c676a423d04acda0ff29bd225e.png?format=webp&quality=lossless" alt="Kairox"><div class="name">Kairox</div></div>
+    <div class="team-member"><img src="https://images-ext-1.discordapp.net/external/LK9Mqdipw-Xazb2eftQ2gugQyz6mFgw_iIhk4nnX0pI/%3Fsize%3D1024/https/cdn.discordapp.com/avatars/1386421165052002366/2fab2aba0968175b3d8e52253a025c5d.png?format=webp&quality=lossless" alt="David"><div class="name">David</div></div>
+    <div class="team-member"><img src="https://images-ext-1.discordapp.net/external/omUUuI71nI0v-GMDzB2XouqwVWyZsbC8ZpWLFibVt-A/%3Fsize%3D1024/https/cdn.discordapp.com/avatars/1297359221280739389/0c8e21345db6f35f607546e0dcbf4295.png?format=webp&quality=lossless" alt="Sylves"><div class="name">Sylves</div></div>
+    <div class="team-member"><img src="https://images-ext-1.discordapp.net/external/MHBAowHph9HCkHKXYWw5MvAeAYxBjX_SAm5oAJFAnzk/%3Fsize%3D1024/https/cdn.discordapp.com/avatars/1260353622001188875/aa9c8431623d1958d02e42f4f026efe3.png?format=webp&quality=lossless" alt="Maik"><div class="name">Maik</div></div>
+  </aside>
+
+  <div class="main" id="main">
+    <section id="productos">
+      <h2>Productos</h2>
+      <div class="grid">
+        <div class="card"><img src="https://via.placeholder.com/120" alt="p1"><p>Producto 1 - Descripción corta.</p></div>
+        <div class="card"><img src="https://via.placeholder.com/120" alt="p2"><p>Producto 2 - Descripción corta.</p></div>
+        <div class="card"><img src="https://via.placeholder.com/120" alt="p3"><p>Producto 3 - Descripción corta.</p></div>
+        <div class="card"><img src="https://via.placeholder.com/120" alt="p4"><p>Producto 4 - Descripción corta.</p></div>
+        <div class="card"><img src="https://via.placeholder.com/120" alt="p5"><p>Producto 5 - Descripción corta.</p></div>
+        <div class="card"><img src="https://via.placeholder.com/120" alt="p6"><p>Producto 6 - Descripción corta.</p></div>
+        <div class="card"><img src="https://via.placeholder.com/120" alt="p7"><p>Producto 7 - Descripción corta.</p></div>
+        <div class="card"><img src="https://via.placeholder.com/120" alt="p8"><p>Producto 8 - Descripción corta.</p></div>
+        <div class="card"><img src="https://via.placeholder.com/120" alt="p9"><p>Producto 9 - Descripción corta.</p></div>
+        <div class="card"><img src="https://via.placeholder.com/120" alt="p10"><p>Producto 10 - Descripción corta.</p></div>
+      </div>
+    </section>
+  </div>
+
+  <audio id="bgm" src="https://files.catbox.moe/ikc7rj.mp3" loop></audio>
+  <div id="musicBtn" title="Pausar / Reanudar">🔊</div>
+
+  <script>
+    const enterBtn = document.getElementById('enterBtn');
+    const welcome = document.getElementById('welcome');
+    const main = document.getElementById('main');
+    const bgm = document.getElementById('bgm');
+    const musicBtn = document.getElementById('musicBtn');
+    let playing = false;
+
+    enterBtn.addEventListener('click', () => {
+      welcome.classList.add('fade');
+      setTimeout(()=> welcome.style.display='none', 900);
+      main.style.display = 'block';
+      bgm.play().then(()=>{ playing = true; musicBtn.textContent = '🔊'; }).catch(e=>{ console.warn('Autoplay falló:', e); });
+    });
+
+    musicBtn.addEventListener('click', ()=>{
+      if(playing){ bgm.pause(); playing=false; musicBtn.textContent='🔇'; }
+      else{ bgm.play().then(()=>{ playing=true; musicBtn.textContent='🔊'; }).catch(()=>{}); }
+    });
+
+    document.addEventListener('DOMContentLoaded', ()=>{ main.style.display='none'; });
+  </script>
+</body>
+</html>
