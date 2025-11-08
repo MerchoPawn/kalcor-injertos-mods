@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tienda Online – Kalcor</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: Arial, sans-serif;
+      background: url('https://i.ytimg.com/vi/-uTHvdtCVJ0/maxresdefault.jpg') center center/cover no-repeat fixed;
+      color: #fff;
+    }
+
+    /* ENCABEZADO */
+    header {
+      background: rgba(0, 0, 0, 0.9);
+      color: #fff;
+      padding: 15px 0;
+      text-align: center;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.8);
+    }
+    header h1 {
+      font-size: 2rem;
+      margin-bottom: 5px;
+    }
+    nav a {
+      color: #fff;
+      margin: 0 15px;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 1.2rem;
+      transition: all 0.3s ease;
+    }
+    nav a:hover {
+      text-shadow: 0 0 10px #7289da, 0 0 20px #7289da, 0 0 30px #7289da;
+    }
+
+    /* BIENVENIDA */
+    #welcome {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100vh;
+      background: url('https://i.ytimg.com/vi/-uTHvdtCVJ0/maxresdefault.jpg') center center/cover no-repeat;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      z-index: 9999;
+    }
+    #welcome button {
+      background: black;
+      color: white;
+      font-size: 1.5rem;
+      padding: 15px 40px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      box-shadow: 0 0 20px 2px white;
+      transition: all 0.3s ease;
+      animation: glow 2s infinite alternate;
+      margin-top: 20px;
+    }
+    #welcome button:hover {
+      transform: scale(1.1);
+      box-shadow: 0 0 35px 10px white;
+    }
+    @keyframes glow {
+      from { box-shadow: 0 0 15px 2px #999; }
+      to { box-shadow: 0 0 35px 8px white; }
+    }
+    #welcome.fade-out {
+      opacity: 0;
+      transition: opacity 1s ease-out;
+      pointer-events: none;
+    }
+
+    /* EQUIPO */
+    .equipo {
+      padding: 60px 20px;
+      text-align: center;
+      background: rgba(0,0,0,0.7);
+    }
+    .equipo h2 {
+      font-size: 2.2rem;
+      margin-bottom: 40px;
+      text-shadow: 0 0 10px white;
+    }
+    .miembros {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 30px;
+    }
+    .miembro {
+      text-align: center;
+      width: 200px;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .miembro img {
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid #fff;
+      margin-bottom: 10px;
+      transition: 0.3s;
+    }
+    .miembro:hover img {
+      box-shadow: 0 0 25px 8px white;
+      transform: scale(1.1);
+    }
+    .miembro h3 {
+      margin-top: 5px;
+      font-size: 1.1rem;
+      text-shadow: 0 0 5px black;
+    }
+
+    /* DISCORD */
+    .discord {
+      padding: 50px 20px;
+      text-align: center;
+      background: rgba(0,0,0,0.85);
+    }
+    .discord h2 {
+      font-size: 2rem;
+      margin-bottom: 15px;
+    }
+    .discord a {
+      background: #5865F2;
+      color: white;
+      padding: 15px 30px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: bold;
+      transition: 0.3s;
+      font-size: 1.2rem;
+      box-shadow: 0 0 15px #5865F2;
+    }
+    .discord a:hover {
+      background: #4752C4;
+      box-shadow: 0 0 25px #7289da;
+    }
+
+    footer {
+      background: rgba(0,0,0,0.85);
+      color: #fff;
+      text-align: center;
+      padding: 20px 0;
+      font-size: 0.9rem;
+    }
+
+    /* Botón de música */
+    #music-btn {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: rgba(0,0,0,0.6);
+      border: 2px solid white;
+      border-radius: 50%;
+      width: 60px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      color: white;
+      cursor: pointer;
+      box-shadow: 0 0 15px white;
+      transition: 0.3s;
+      z-index: 999;
+    }
+    #music-btn:hover {
+      transform: scale(1.1);
+      box-shadow: 0 0 25px white;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- PANTALLA DE BIENVENIDA -->
+  <div id="welcome">
+    <button id="enter-btn">Entrar</button>
+  </div>
+
+  <!-- ENCABEZADO -->
+  <header>
+    <h1>Tienda Online</h1>
+    <nav>
+      <a href="https://discord.gg/W3zan8fpSG" target="_blank">Discord</a>
+    </nav>
+  </header>
+
+  <!-- EQUIPO -->
+  <section id="equipo" class="equipo">
+    <h2>Nuestro Equipo</h2>
+    <div class="miembros">
+      <div class="miembro"><img src="https://images-ext-1.discordapp.net/external/ynbXltmh53vnyfW1ksY6Y-nmqHVSE_i4x3pjXILqNTQ/%3Fsize%3D1024/https/cdn.discordapp.com/avatars/1354865570880946176/a6e7ce488b0c3a8856e69184638319bb.png?format=webp&quality=lossless"><h3>Kalcor</h3></div>
+      <div class="miembro"><img src="https://images-ext-1.discordapp.net/external/mvgWa3gAaG_BbwsHzBZh5ozY-r4SQdjH1np8E8H9b4A/%3Fsize%3D1024/https/cdn.discordapp.com/avatars/1414075135350280234/efcb92d7cccb4f6da746f47b1441dc65.png?format=webp&quality=lossless"><h3>Manzer</h3></div>
+      <div class="miembro"><img src="https://images-ext-1.discordapp.net/external/mjILml0zIL5P-CFIILgvI4T-n_v38JONLGj6bVv_Gfs/%3Fsize%3D1024/https/cdn.discordapp.com/avatars/1221849688593137830/ccbeb578b68bd02a4b19dc1ddd506842.png?format=webp&quality=lossless&width=780&height=780"><h3>Jacob</h3></div>
+      <div class="miembro"><img src="https://images-ext-1.discordapp.net/external/6GnUGKN0qyhcZ2kye74XbYOsvNK6A47AiipqPOi1nqw/%3Fsize%3D1024/https/cdn.discordapp.com/guilds/1387892493860999319/users/1298301131641983019/avatars/a_1e3d8f261e5560ab8bec9d9277b77f0d.gif"><h3>Hilnzo</h3></div>
+      <div class="miembro"><img src="https://images-ext-1.discordapp.net/external/yIUfnShREDUwGqApB0Gu-B1OAVm3Encz2SjtqwWGCO8/%3Fsize%3D1024/https/cdn.discordapp.com/avatars/1246355878840631327/5a14e4c676a423d04acda0ff29bd225e.png?format=webp&quality=lossless"><h3>Kairox</h3></div>
+    </div>
+  </section>
+
+  <!-- DISCORD -->
+  <section id="discord" class="discord">
+    <h2>Discord de la Comunidad</h2>
+    <p>Únete a nuestro servidor oficial y sé parte de la comunidad.</p>
+    <a href="https://discord.gg/W3zan8fpSG" target="_blank">Entrar al Discord</a>
+  </section>
+
+  <footer>
+    <p>© 2025 Tienda Online – Kalcor y equipo</p>
+  </footer>
+
+  <!-- Música -->
+  <audio id="bgm" src="https://files.catbox.moe/ikc7rj.mp3" loop></audio>
+
+  <!-- Botón para pausar/reanudar música -->
+  <div id="music-btn">🎵</div>
+
+  <script>
+    const enterBtn = document.getElementById('enter-btn');
+    const welcome = document.getElementById('welcome');
+    const bgm = document.getElementById('bgm');
+    const musicBtn = document.getElementById('music-btn');
+    let isPlaying = false;
+
+    enterBtn.addEventListener('click', () => {
+      welcome.classList.add('fade-out');
+      bgm.play().then(() => { isPlaying = true; }).catch(err => console.warn('Autoplay bloqueado:', err));
+      setTimeout(() => {
+        welcome.style.display = 'none';
+        document.getElementById('equipo').scrollIntoView({ behavior: 'smooth' });
+      }, 1000);
+    });
+
+    musicBtn.addEventListener('click', () => {
+      if (isPlaying) {
+        bgm.pause();
+        musicBtn.textContent = '🔇';
+      } else {
+        bgm.play();
+        musicBtn.textContent = '🎵';
+      }
+      isPlaying = !isPlaying;
+    });
+  </script>
+</body>
+</html>
