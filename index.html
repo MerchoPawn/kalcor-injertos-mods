@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Tienda Injertos Mods</title>
+
+  <!-- Preload important assets to improve perceived performance -->
+  <link rel="preload" as="image" href="https://cdn-images.dzcdn.net/images/cover/0b6b4ff81c0958f882c5fa5a0f88cdc1/0x1900-000000-80-0-0.jpg">
+  <link rel="preload" as="audio" href="https://files.catbox.moe/ikc7rj.mp3">
+
+  <style>
+    :root{
+      --accent: #ff3b3b;
+      --white: #ffffff;
+      --bg-overlay: rgba(0,0,0,0.45);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0;font-family:Inter, "Poppins", system-ui, Arial, sans-serif;background:#000;}
+    body{
+      background: url('https://cdn-images.dzcdn.net/images/cover/0b6b4ff81c0958f882c5fa5a0f88cdc1/0x1900-000000-80-0-0.jpg') center/cover no-repeat fixed;
+      color:var(--white);
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      overflow-x:hidden;
+    }
+
+    /* ---------- Intro (ENTRAR + neon) ---------- */
+    #intro {
+      position:fixed;inset:0;z-index:9999;
+      display:flex;flex-direction:column;align-items:center;justify-content:center;
+      background:transparent;backdrop-filter:brightness(0.45);
+      transition:opacity .8s ease;
+    }
+    #enter-btn{
+      background:linear-gradient(145deg,#000,#111);
+      color:var(--white);border:0;padding:14px 40px;border-radius:12px;
+      font-weight:700;font-size:20px;cursor:pointer;
+      box-shadow:0 0 14px rgba(255,59,59,0.25);transition:transform .18s,box-shadow .18s;
+    }
+    #enter-btn:hover{transform:scale(1.04);box-shadow:0 0 30px rgba(255,59,59,0.45)}
+    /* neon logo text (hidden until enter click triggers it) */
+    #logo-text{
+      margin-top:28px;
+      color:var(--accent);
+      text-shadow:0 0 8px rgba(255,59,59,0.6),0 0 18px rgba(255,90,90,0.35);
+      opacity:0;display:none;
+      letter-spacing:4px;
+      font-weight:800;
+      text-align:center;
+      will-change:opacity,text-shadow,transform;
+    }
+    @keyframes neon-appear{
+      0% { opacity:0; filter:blur(0px); text-shadow:0 0 0 rgba(255,59,59,0); transform:scale(.98); }
+      50% { opacity:1; text-shadow:0 0 20px rgba(255,59,59,0.9),0 0 40px rgba(255,90,90,0.5); transform:scale(1.02); }
+      100% { opacity:1; text-shadow:0 0 30px rgba(255,59,59,1),0 0 70px rgba(255,90,90,0.45); transform:scale(1); }
+    }
+
+    /* ---------- Main content wrapper ---------- */
+    #main-content{
+      display:none;
+      min-height:100vh;
+      padding:36px 18px 96px;
+      background: linear-gradient(180deg, rgba(0,0,0,0.0), rgba(0,0,0,0.35));
+      transition:opacity .6s ease;
+      max-width:1300px;margin:0 auto;
+    }
+
+    /* Title + description */
+    .main-title{
+      text-align:center;
+      color:var(--accent);
+      font-weight:800;
+      margin: 6px 0 12px;
+      text-shadow:0 0 14px rgba(255,59,59,0.45);
+      letter-spacing:2px;
+    }
+    .desc {
+      text-align:center;
+      color:var(--white);
+      opacity:0.95;
+      max-width:960px;
+      margin: 0 auto 26px;
+      font-size:18px;
+      line-height:1.5;
+      /* empty by default for you to edit */
+    }
+
+    /* ---------- Team bar (centered on wide screens) ---------- */
+    #team-bar {
+      display:flex;
+      gap:18px;
+      overflow-x:auto;
+      padding:12px;
+      border-radius:10px;
+      align-items:center;
+      justify-content:center;
+      background:rgba(0,0,0,0.5);
+      margin-bottom:28px;
+      -webkit-overflow-scrolling:touch;
+    }
+    #team-bar::-webkit-scrollbar{height:8px}
+    #team-bar::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.08);border-radius:8px}
+
+    .member {
+      flex:0 0 auto;
+      text-align:center;
+      width:120px;
+      transition:transform .18s ease;
+      position:relative;
+    }
+    .member img{
+      width:110px;height:110px;border-radius:50%;object-fit:cover;border:3px solid rgba(255,255,255,0.08);
+      transition:transform .18s, box-shadow .18s, border-color .18s, filter .18s;
+      background:#111;
+    }
+    .member:hover img{
+      transform:scale(1.07);
+      box-shadow:0 0 18px rgba(255,59,59,0.25);
+      border-color:var(--accent);
+      filter:brightness(1.15);
+    }
+    .member .name{margin-top:8px;font-weight:700}
+    .member .role{
+      display:block;font-size:13px;color:var(--accent);margin-top:6px;opacity:0;
+      transition:opacity .18s ease, transform .18s;
+      text-shadow:0 0 6px rgba(255,59,59,0.35);
+    }
+    .member:hover .role{opacity:1}
+
+    /* ---------- Products: 3 per row large cards ---------- */
+    .products {
+      display:grid;
+      grid-template-columns:repeat(3, 1fr);
+      gap:28px;
+      align-items:start;
+    }
+    .product {
+      background:rgba(6,6,6,0.72);
+      border:1px solid rgba(255,255,255,0.06);
+      border-radius:14px;
+      padding:12px;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      transition:transform .18s, box-shadow .18s;
+      min-height:420px;
+    }
+    .product img{
+      width:100%;
+      height:250px;
+      object-fit:cover;
+      border-radius:10px;
+      margin-bottom:12px;
+      background:#111;
+    }
+    .product p{flex:1;text-align:center;font-size:15px;line-height:1.45;padding:0 8px}
+    .buy-btn{
+      display:inline-block;
+      background:var(--accent);color:#fff;border-radius:10px;padding:10px 18px;font-weight:700;
+      border:0;text-decoration:none;margin-top:12px;cursor:pointer;
+      transition:transform .15s,box-shadow .15s;
+    }
+    .buy-btn:hover{transform:scale(1.04);box-shadow:0 0 18px rgba(255,59,59,0.35)}
+
+    /* ---------- Discord CTA ---------- */
+    .discord{margin-top:36px;text-align:center}
+    .discord a{
+      display:inline-block;padding:12px 22px;background:#000;border:2px solid var(--accent);color:#fff;border-radius:12px;text-decoration:none;
+      transition:box-shadow .18s; font-weight:700;
+    }
+    .discord a:hover{box-shadow:0 0 18px rgba(255,59,59,0.25);background:var(--accent)}
+
+    /* ---------- Music toggle (icon) ---------- */
+    #music-toggle{
+      position:fixed;right:18px;bottom:18px;width:56px;height:56px;border-radius:50%;
+      display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.7);
+      color:#fff;border:2px solid rgba(255,255,255,0.06);font-size:26px;cursor:pointer;z-index:1500;
+      transition:box-shadow .18s,transform .12s;
+    }
+    #music-toggle:hover{box-shadow:0 0 18px rgba(255,59,59,0.25);transform:scale(1.06)}
+
+    /* ---------- Responsive / performance tweaks ---------- */
+    @media (max-width:1000px){
+      .products{grid-template-columns:repeat(2,1fr)}
+      .product img{height:220px}
+    }
+    @media (max-width:700px){
+      #logo-text{font-size:50px}
+      #logo-text{letter-spacing:2px}
+      .main-title{font-size:36px}
+      .desc{font-size:16px;padding:0 12px}
+      .products{grid-template-columns:1fr;gap:18px}
+      .product{min-height:auto}
+      /* reduce heavy shadows and glows to spare CPU on mobiles */
+      .member img, .product, .buy-btn, #music-toggle {transition:transform .12s}
+      .member img {box-shadow:none}
+    }
+    @media (min-width:701px){
+      #logo-text{font-size:80px}
+      .main-title{font-size:48px}
+      .desc{font-size:18px}
+    }
+
+    /* minor accessibility focus outline */
+    :focus{outline:3px solid rgba(255,59,59,0.15);outline-offset:3px}
+  </style>
+</head>
+<body>
+
+  <!-- INTRO (only Entrar visible initially) -->
+  <div id="intro" aria-hidden="false">
+    <button id="enter-btn" aria-label="Entrar a la tienda">ENTRAR</button>
+    <h1 id="logo-text" aria-hidden="true">INJERTOS MODS</h1>
+  </div>
+
+  <!-- MAIN content (hidden until after intro) -->
+  <main id="main-content" role="main" aria-hidden="true">
+    <h2 class="main-title">TIENDA INJERTOS MODS</h2>
+
+    <!-- description - EMPTY for you to edit directly -->
+    <div class="desc" id="description" contenteditable="true" aria-label="Descripción (edítala)"></div>
+
+    <!-- Team bar -->
+    <section id="team-bar" aria-label="Equipo">
+      <div class="member">
+        <img src="https://images-ext-1.discordapp.net/external/ynbXltmh53vnyfW1ksY6Y-nmqHVSE_i4x3pjXILqNTQ/%3Fsize%3D1024/https/cdn.discordapp.com/avatars/1354865570880946176/a6e7ce488b0c3a8856e69184638319bb.png?format=webp&quality=lossless" alt="Kalcor">
+        <div class="name">Kalcor</div>
+        <div class="role">Owner</div>
+      </div>
+
+      <div class="member">
+        <img src="https://images-ext-1.discordapp.net/external/BTE7i3QbFUqpeFjvi5CsbL-IISthPMSsj3XGZMpr0xo/%3Fsize%3D1024/https/cdn.discordapp.com/avatars/1414075135350280234/8a3280e88a6cfce972fe12ad13780d0f.png?format=webp&quality=lossless" alt="Manzer">
+        <div class="name">Manzer</div>
+        <div class="role">Owner</div>
+      </div>
+
+      <div class="member">
+        <img src="https://images-ext-1.discordapp.net/external/mjILml0zIL5P-CFIILgvI4T-n_v38JONLGj6bVv_Gfs/%3Fsize%3D1024/https/cdn.discordapp.com/avatars/1221849688593137830/ccbeb578b68bd02a4b19dc1ddd506842.png?format=webp&quality=lossless" alt="Jacob">
+        <div class="name">Jacob</div>
+        <div class="role">Owner</div>
+      </div>
+
+      <div class="member">
+        <img src="https://images-ext-1.discordapp.net/external/6GnUGKN0qyhcZ2kye74XbYOsvNK6A47AiipqPOi1nqw/%3Fsize%3D1024/https/cdn.discordapp.com/guilds/1387892493860999319/users/1298301131641983019/avatars/a_1e3d8f261e5560ab8bec9d9277b77f0d.gif" alt="Hilnzo">
+        <div class="name">Hilnzo</div>
+        <div class="role">Owner</div>
+      </div>
+
+      <div class="member">
+        <img src="https://images-ext-1.discordapp.net/external/yIUfnShREDUwGqApB0Gu-B1OAVm3Encz2SjtqwWGCO8/%3Fsize%3D1024/https/cdn.discordapp.com/avatars/1246355878840631327/5a14e4c676a423d04acda0ff29bd225e.png?format=webp&quality=lossless" alt="Kairox">
+        <div class="name">Kairox</div>
+        <div class="role">Kabraso</div>
+      </div>
+
+      <div class="member">
+        <img src="https://images-ext-1.discordapp.net/external/MHBAowHph9HCkHKXYWw5MvAeAYxBjX_SAm5oAJFAnzk/%3Fsize%3D1024/https/cdn.discordapp.com/avatars/1260353622001188875/aa9c8431623d1958d02e42f4f026efe3.png?format=webp&quality=lossless" alt="Maik">
+        <div class="name">Maik</div>
+        <div class="role">Owner</div>
+      </div>
+
+      <div class="member">
+        <img src="https://images-ext-1.discordapp.net/external/LK9Mqdipw-Xazb2eftQ2gugQyz6mFgw_iIhk4nnX0pI/%3Fsize%3D1024/https/cdn.discordapp.com/avatars/1386421165052002366/2fab2aba0968175b3d8e52253a025c5d.png?format=webp&quality=lossless" alt="David">
+        <div class="name">David</div>
+        <div class="role">Sub Encargado</div>
+      </div>
+
+      <div class="member">
+        <img src="https://images-ext-1.discordapp.net/external/omUUuI71nI0v-GMDzB2XouqwVWyZsbC8ZpWLFibVt-A/%3Fsize%3D1024/https/cdn.discordapp.com/avatars/1297359221280739389/0c8e21345db6f35f607546e0dcbf4295.png?format=webp&quality=lossless" alt="Sylver">
+        <div class="name">Sylver</div>
+        <div class="role">Sub Encargado</div>
+      </div>
+    </section>
+
+    <!-- Products (10) arranged 3 per row on wide screens -->
+    <section aria-label="Productos">
+      <h2 style="margin-bottom:18px;text-align:center;color:var(--white);">Productos</h2>
+      <div class="products" id="productsGrid">
+        <!-- 10 example products -->
+        <div class="product">
+          <img src="https://wallpapercave.com/wp/wp3339630.jpg" alt="Producto 1">
+          <p>Vehículo de alta calidad para GTA SA.</p>
+          <a class="buy-btn" href="https://discord.gg/W3zan8fpSG" target="_blank" rel="noopener">Comprar</a>
+        </div>
+        <div class="product">
+          <img src="https://wallpapercave.com/wp/wp2763216.jpg" alt="Producto 2">
+          <p>Pack de texturas HD realistas.</p>
+          <a class="buy-btn" href="https://discord.gg/W3zan8fpSG" target="_blank" rel="noopener">Comprar</a>
+        </div>
+        <div class="product">
+          <img src="https://wallpapercave.com/wp/wp2318745.jpg" alt="Producto 3">
+          <p>Mod de armas mejoradas para GTA SA.</p>
+          <a class="buy-btn" href="https://discord.gg/W3zan8fpSG" target="_blank" rel="noopener">Comprar</a>
+        </div>
+        <div class="product">
+          <img src="https://wallpapercave.com/wp/wp5114241.jpg" alt="Producto 4">
+          <p>Vehículo deportivo exclusivo.</p>
+          <a class="buy-btn" href="https://discord.gg/W3zan8fpSG" target="_blank" rel="noopener">Comprar</a>
+        </div>
+        <div class="product">
+          <img src="https://wallpapercave.com/wp/wp2001741.jpg" alt="Producto 5">
+          <p>Mod gráfico ENB Series realista.</p>
+          <a class="buy-btn" href="https://discord.gg/W3zan8fpSG" target="_blank" rel="noopener">Comprar</a>
+        </div>
+        <div class="product">
+          <img src="https://wallpapercave.com/wp/wp2132443.jpg" alt="Producto 6">
+          <p>Edición especial de skin customizada.</p>
+          <a class="buy-btn" href="https://discord.gg/W3zan8fpSG" target="_blank" rel="noopener">Comprar</a>
+        </div>
+        <div class="product">
+          <img src="https://wallpapercave.com/wp/wp3680420.jpg" alt="Producto 7">
+          <p>Vehículo 4x4 totalmente detallado.</p>
+          <a class="buy-btn" href="https://discord.gg/W3zan8fpSG" target="_blank" rel="noopener">Comprar</a>
+        </div>
+        <div class="product">
+          <img src="https://wallpapercave.com/wp/wp3377099.jpg" alt="Producto 8">
+          <p>Paquete de efectos visuales avanzados.</p>
+          <a class="buy-btn" href="https://discord.gg/W3zan8fpSG" target="_blank" rel="noopener">Comprar</a>
+        </div>
+        <div class="product">
+          <img src="https://wallpapercave.com/wp/wp1917288.jpg" alt="Producto 9">
+          <p>Mod de sonido inmersivo.</p>
+          <a class="buy-btn" href="https://discord.gg/W3zan8fpSG" target="_blank" rel="noopener">Comprar</a>
+        </div>
+        <div class="product">
+          <img src="https://wallpapercave.com/wp/wp3410149.jpg" alt="Producto 10">
+          <p>Armas personalizadas premium.</p>
+          <a class="buy-btn" href="https://discord.gg/W3zan8fpSG" target="_blank" rel="noopener">Comprar</a>
+        </div>
+      </div>
+    </section>
+
+    <div class="discord">
+      <a href="https://discord.gg/W3zan8fpSG" target="_blank" rel="noopener">Entrar al Discord</a>
+    </div>
+  </main>
+
+  <!-- Music toggle -->
+  <div id="music-toggle" aria-label="Pausar o reanudar música">🔊</div>
+
+  <!-- Audio element (preloaded) -->
+  <audio id="bg-music" src="https://files.catbox.moe/ikc7rj.mp3" loop preload="auto"></audio>
+
+  <script>
+    (function(){
+      const enterBtn = document.getElementById('enter-btn');
+      const intro = document.getElementById('intro');
+      const logoText = document.getElementById('logo-text');
+      const main = document.getElementById('main-content');
+      const music = document.getElementById('bg-music');
+      const musicToggle = document.getElementById('music-toggle');
+      const desc = document.getElementById('description');
+
+      // Setup initial sizes for responsive neon text
+      function setLogoSize(){
+        const w = window.innerWidth;
+        if(w <= 700){
+          logoText.style.fontSize = '50px';
+        } else {
+          logoText.style.fontSize = '80px';
+        }
+      }
+      setLogoSize();
+      window.addEventListener('resize', setLogoSize);
+
+      // ENTER click: show neon text for 3s, then show main content
+      enterBtn.addEventListener('click', () => {
+        // hide button, show neon text
+        enterBtn.style.display = 'none';
+        logoText.style.display = 'block';
+        // animate via CSS keyframes (neon-appear)
+        logoText.style.animation = 'neon-appear 3s ease forwards';
+        // After 3s (duration) + small fade: hide intro and show main
+        setTimeout(() => {
+          intro.style.opacity = '0';
+          // small delay to allow fade out
+          setTimeout(() => {
+            intro.style.display = 'none';
+            // show main content
+            main.style.display = 'block';
+            main.setAttribute('aria-hidden','false');
+            // focus description for quick editing if user wants
+            //desc.focus();
+            // try to start music; browsers may block autoplay until user gesture, but the click on ENTRAR counts as gesture
+            music.play().catch(()=>{ /* ignore autoplay block errors */ });
+          }, 800);
+        }, 3000);
+      });
+
+      // Music toggle behavior
+      function updateMusicIcon(){
+        musicToggle.textContent = music.paused ? '🔇' : '🔊';
+      }
+      musicToggle.addEventListener('click', () => {
+        if (music.paused) {
+          music.play().catch(()=>{}); // ignore errors
+        } else {
+          music.pause();
+        }
+        updateMusicIcon();
+      });
+      // initialize icon
+      updateMusicIcon();
+
+      // Pause music when user switches tab (visibility change) to save resources
+      document.addEventListener('visibilitychange', () => {
+        if (document.hidden) {
+          if(!music.paused){ music.pause(); music.__wasPlaying = true; } // mark if it was playing
+        } else {
+          // do not auto-resume; only resume if it was playing before and user hasn't paused manually
+          // we'll resume only if it was playing and user didn't toggle to paused while away
+          if(music.__wasPlaying && music.paused){
+            // don't auto-play without user gesture in some browsers, so attempt and ignore rejection
+            music.play().catch(()=>{});
+            music.__wasPlaying = false;
+            updateMusicIcon();
+          }
+        }
+        updateMusicIcon();
+      });
+
+      // Improve team-bar horizontal dragging with mouse (desktop)
+      (function enableDragScroll(selector){
+        const el = document.querySelector(selector);
+        if(!el) return;
+        let isDown = false, startX, scrollLeft;
+        el.addEventListener('mousedown', (e) => {
+          isDown = true; el.classList.add('dragging');
+          startX = e.pageX - el.offsetLeft; scrollLeft = el.scrollLeft;
+        });
+        el.addEventListener('mouseleave', ()=>{ isDown=false; el.classList.remove('dragging'); });
+        el.addEventListener('mouseup', ()=>{ isDown=false; el.classList.remove('dragging'); });
+        el.addEventListener('mousemove', (e) => {
+          if(!isDown) return;
+          e.preventDefault();
+          const x = e.pageX - el.offsetLeft;
+          const walk = (x - startX) * 1;
+          el.scrollLeft = scrollLeft - walk;
+        });
+      })('#team-bar');
+
+      // Accessibility: allow pressing Enter on the big Enter button
+      enterBtn.addEventListener('keyup', (e) => { if(e.key === 'Enter') enterBtn.click(); });
+
+      // Ensure description is empty and editable (you asked to edit)
+      desc.innerHTML = ''; // leave empty for you to edit
+
+      // Performance tip: limit heavy glows on small devices
+      function reduceEffectsOnMobile(){
+        if(window.innerWidth <= 700){
+          document.documentElement.style.setProperty('--mobile-light', '1');
+        }
+      }
+      reduceEffectsOnMobile();
+      window.addEventListener('resize', reduceEffectsOnMobile);
+
+      // initial aria states
+      main.setAttribute('aria-hidden','true');
+    })();
+  </script>
+</body>
+</html>
