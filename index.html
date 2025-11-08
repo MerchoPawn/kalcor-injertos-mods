@@ -1,0 +1,423 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>INJERTOS MODS - Tienda</title>
+
+<link rel="icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNTYiIGhlaWdodD0iMjU2Ij4KICA8cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjMDAwMDAwIi8+CiAgPHRleHQgeD0iNTAlIiB5PSI1NCUiIGZvbnQtZmFtaWx5PSJBcmlhbCwgSGVsdmV0aWNhIiBmb250LXNpemU9IjQ0IiBmaWxsPSIjZmYzYjNiIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5JTkpUTU1EUzwvdGV4dD4KPC9zdmc+" />
+
+<style>
+:root{
+  --accent:#ff3b3b;
+  --white:#ffffff;
+  --bg-url: url('https://cdn-images.dzcdn.net/images/cover/0b6b4ff81c0958f882c5fa5a0f88cdc1/0x1900-000000-80-0-0.jpg');
+  --trans-dur: 900ms;
+}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;font-family:Inter, Poppins, system-ui, Arial, sans-serif;background:#000;color:var(--white);-webkit-font-smoothing:antialiased}
+body{
+  background-image: var(--bg-url);
+  background-size:cover;
+  background-position:center;
+  background-attachment:fixed;
+}
+
+/* ---------- Intro (cover) ---------- */
+#intro {
+  position:fixed;inset:0;z-index:9999;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  backdrop-filter:brightness(0.45);
+  gap:28px;
+  transition:opacity .8s ease;
+}
+#intro.hidden{opacity:0;pointer-events:none;}
+
+/* Enter button (large) */
+#enter-btn{
+  background:linear-gradient(145deg,#000,#111);
+  color:var(--white);
+  border:0;padding:16px 46px;border-radius:14px;
+  font-weight:900;font-size:22px;cursor:pointer;
+  box-shadow:0 0 20px rgba(255,59,59,0.28);
+  letter-spacing:2px;
+  transition:transform .18s, box-shadow .18s;
+}
+#enter-btn:hover{transform:scale(1.04);box-shadow:0 0 36px rgba(255,59,59,0.45)}
+
+/* Logo neon text shown on enter */
+#logo-text{color:var(--accent);font-weight:900;letter-spacing:4px;display:none;text-align:center}
+#logo-text.neon{
+  display:block;
+  text-shadow:0 0 8px rgba(255,59,59,0.6),0 0 18px rgba(255,90,90,0.35);
+  will-change:opacity,transform,text-shadow;
+}
+
+/* ---------- App container (SPA) ---------- */
+.app{
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  padding:28px 18px 80px;
+  gap:18px;
+  position:relative;
+}
+
+/* Title + description */
+.header-wrap{width:100%;max-width:1200px;text-align:center;}
+.title{
+  color:var(--accent);font-weight:900;
+  text-shadow:0 0 14px rgba(255,59,59,0.45);
+  margin:0;font-size:48px;
+}
+@media(max-width:700px){.title{font-size:36px}}
+/* description fixed (non-editable) */
+.description{
+  margin:10px auto 18px;max-width:1000px;font-size:18px;line-height:1.45;
+  text-align:center;color:var(--white);
+  text-shadow:0 0 8px rgba(255,59,59,0.15);
+  /* neon pulse slow */
+  animation:neonPulse 4s infinite ease-in-out alternate;
+  padding:4px 12px;
+}
+@keyframes neonPulse{
+  0%{text-shadow:0 0 6px rgba(255,59,59,0.18)}
+  100%{text-shadow:0 0 26px rgba(255,59,59,0.45)}
+}
+
+/* APORTES button (smaller than enter, pulsing neon) */
+.actions {display:flex;gap:12px;justify-content:center;margin-bottom:6px}
+.btn-aportes{
+  background:linear-gradient(145deg,#000,#0b0b0b);
+  border:2px solid rgba(255,59,59,0.85);
+  color:var(--white);
+  padding:10px 18px;border-radius:12px;font-weight:800;cursor:pointer;
+  font-size:18px;letter-spacing:1.5px;
+  box-shadow:0 0 10px rgba(255,59,59,0.12);
+  transition:transform .12s,box-shadow .15s,background .12s;
+  animation:apPulse 3.6s infinite ease-in-out;
+  text-transform:uppercase;
+}
+@keyframes apPulse{
+  0%{box-shadow:0 0 6px rgba(255,59,59,0.12)}
+  100%{box-shadow:0 0 26px rgba(255,59,59,0.28)}
+}
+.btn-aportes:hover{transform:scale(1.03);background:rgba(255,59,59,0.06)}
+
+/* Team bar */
+.team-wrap{width:100%;max-width:1200px}
+#team-bar{
+  display:flex;gap:16px;overflow-x:auto;padding:12px;border-radius:12px;
+  background:linear-gradient(180deg, rgba(0,0,0,0.36), rgba(0,0,0,0.46));
+  align-items:center;justify-content:flex-start;
+  -webkit-overflow-scrolling:touch;
+  transition:opacity var(--trans-dur) ease,transform var(--trans-dur) ease;
+  opacity:0; transform:translateY(8px);
+}
+#team-bar.visible{opacity:1;transform:none}
+#team-bar::-webkit-scrollbar{height:8px}
+.member{flex:0 0 auto;text-align:center;width:120px;transition:transform .12s}
+.member img{width:110px;height:110px;border-radius:50%;object-fit:cover;border:3px solid rgba(255,255,255,0.06);transition:transform .18s,box-shadow .18s,filter .18s}
+.member:hover img{transform:scale(1.06);box-shadow:0 0 18px rgba(255,59,59,0.28);border-color:var(--accent);filter:brightness(1.08)}
+.member .name{margin-top:8px;font-weight:800;color:var(--white)}
+.member .role{font-size:13px;color:var(--accent);margin-top:6px;opacity:0;transition:opacity .15s}
+.member:hover .role{opacity:1}
+
+/* Products (Aportes) */
+.section{width:100%;max-width:1200px;min-height:60vh;padding:18px;border-radius:12px;background:linear-gradient(180deg, rgba(0,0,0,0.0), rgba(0,0,0,0.28))}
+.products{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.product{background:rgba(6,6,6,0.78);border-radius:12px;padding:12px;text-align:center;border:1px solid rgba(255,255,255,0.04);min-height:360px;display:flex;flex-direction:column}
+.product img{width:100%;height:240px;object-fit:cover;border-radius:8px;margin-bottom:12px;background:#111}
+.product p{flex:1;font-size:15px;margin-bottom:8px}
+.buy-btn{display:inline-block;padding:10px 16px;background:var(--accent);color:#fff;border-radius:8px;text-decoration:none;font-weight:800}
+
+/* Fade & zoom transition container for in/out */
+.view {opacity:0; transform:scale(.98); transition:opacity .8s ease, transform .8s ease; pointer-events:none;}
+.view.visible{opacity:1; transform:scale(1); pointer-events:auto;}
+
+/* Fade only for team list appear */
+.fade-in{opacity:0; transition:opacity .6s ease; }
+.fade-in.show{opacity:1}
+
+/* Responsive */
+@media(max-width:1000px){.products{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:700px){
+  .products{grid-template-columns:1fr}
+  #team-bar{padding:10px;gap:12px}
+  .member{width:100px}.member img{width:92px;height:92px}
+  .title{font-size:32px}
+  .btn-aportes{font-size:16px;padding:9px 16px}
+}
+
+/* small accessibility focus */
+:focus{outline:3px solid rgba(255,59,59,0.12);outline-offset:3px}
+</style>
+</head>
+<body>
+
+<!-- INTRO -->
+<div id="intro" aria-hidden="false">
+  <button id="enter-btn" aria-label="Entrar">ENTRAR</button>
+  <div id="logo-text" class="neon" style="font-size:80px;display:none">INJERTOS MODS</div>
+</div>
+
+<!-- SPA app -->
+<div id="app" class="app" style="display:none">
+  <!-- EQUIPO VIEW -->
+  <section id="team-view" class="view visible" aria-label="Equipo principal">
+    <div class="header-wrap">
+      <h1 class="title">TIENDA INJERTOS MODS</h1>
+      <div id="welcome" class="description">
+        Bienvenido A La Tienda Oficial De Injertos Mods Aca Encontraras Aportes, Mods, Cleos Unicos Y Privados Para Tu Samp Si Te Interesa Algun Mod Abre Ticket En El Discord Y Te Atenderemos Con Mucho Gusto!
+      </div>
+
+      <div class="actions">
+        <button id="btn-aportes" class="btn-aportes" aria-label="Ir a Aportes">APORTES</button>
+      </div>
+    </div>
+
+    <div class="team-wrap">
+      <div id="team-bar" aria-label="Equipo" role="list">
+        <!-- 1 Kalcor (updated image) -->
+        <div class="member" role="listitem">
+          <img src="https://cdn.discordapp.com/avatars/1354865570880946176/b7cecb35865ecd6d3fb193cbdb17b860.png?size=1024" alt="Kalcor">
+          <div class="name">Kalcor</div>
+          <div class="role">Owner</div>
+        </div>
+
+        <!-- 2 Manzer -->
+        <div class="member">
+          <img src="https://images-ext-1.discordapp.net/external/BTE7i3QbFUqpeFjvi5CsbL-IISthPMSsj3XGZMpr0xo/%3Fsize%3D1024/https/cdn.discordapp.com/avatars/1414075135350280234/8a3280e88a6cfce972fe12ad13780d0f.png?format=webp&quality=lossless" alt="Manzer">
+          <div class="name">Manzer</div>
+          <div class="role">Owner</div>
+        </div>
+
+        <!-- 3 Jacob -->
+        <div class="member">
+          <img src="https://images-ext-1.discordapp.net/external/mjILml0zIL5P-CFIILgvI4T-n_v38JONLGj6bVv_Gfs/%3Fsize%3D1024/https/cdn.discordapp.com/avatars/1221849688593137830/ccbeb578b68bd02a4b19dc1ddd506842.png?format=webp&quality=lossless" alt="Jacob">
+          <div class="name">Jacob</div>
+          <div class="role">Owner</div>
+        </div>
+
+        <!-- 4 Hilnzo (gif) -->
+        <div class="member">
+          <img src="https://images-ext-1.discordapp.net/external/6GnUGKN0qyhcZ2kye74XbYOsvNK6A47AiipqPOi1nqw/%3Fsize%3D1024/https/cdn.discordapp.com/guilds/1387892493860999319/users/1298301131641983019/avatars/a_1e3d8f261e5560ab8bec9d9277b77f0d.gif" alt="Hilnzo">
+          <div class="name">Hilnzo</div>
+          <div class="role">Owner</div>
+        </div>
+
+        <!-- 5 Maik -->
+        <div class="member">
+          <img src="https://images-ext-1.discordapp.net/external/MHBAowHph9HCkHKXYWw5MvAeAYxBjX_SAm5oAJFAnzk/%3Fsize%3D1024/https/cdn.discordapp.com/avatars/1260353622001188875/aa9c8431623d1958d02e42f4f026efe3.png?format=webp&quality=lossless" alt="Maik">
+          <div class="name">Maik</div>
+          <div class="role">Owner</div>
+        </div>
+
+        <!-- 6 David -->
+        <div class="member">
+          <img src="https://images-ext-1.discordapp.net/external/LK9Mqdipw-Xazb2eftQ2gugQyz6mFgw_iIhk4nnX0pI/%3Fsize%3D1024/https/cdn.discordapp.com/avatars/1386421165052002366/2fab2aba0968175b3d8e52253a025c5d.png?format=webp&quality=lossless" alt="David">
+          <div class="name">David</div>
+          <div class="role">Sub Encargado</div>
+        </div>
+
+        <!-- 7 Sylver -->
+        <div class="member">
+          <img src="https://images-ext-1.discordapp.net/external/omUUuI71nI0v-GMDzB2XouqwVWyZsbC8ZpWLFibVt-A/%3Fsize%3D1024/https/cdn.discordapp.com/avatars/1297359221280739389/0c8e21345db6f35f607546e0dcbf4295.png?format=webp&quality=lossless" alt="Sylver">
+          <div class="name">Sylver</div>
+          <div class="role">Sub Encargado</div>
+        </div>
+
+        <!-- 8 Kairox Kabraso (no role) -->
+        <div class="member">
+          <img src="https://images-ext-1.discordapp.net/external/yIUfnShREDUwGqApB0Gu-B1OAVm3Encz2SjtqwWGCO8/%3Fsize%3D1024/https/cdn.discordapp.com/avatars/1246355878840631327/5a14e4c676a423d04acda0ff29bd225e.png?format=webp&quality=lossless" alt="Kairox">
+          <div class="name">Kairox Kabraso</div>
+          <div class="role">&nbsp;</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- APORTES VIEW -->
+  <section id="aportes-view" class="view" aria-label="Aportes">
+    <div style="width:100%;max-width:1200px;margin:0 auto;padding:18px;text-align:center">
+      <a id="back-to-team" class="btn-aportes" style="display:inline-block;margin-bottom:12px;transform:scale(.95);">VOLVER</a>
+      <h2 style="color:var(--accent);font-weight:900;text-shadow:0 0 12px rgba(255,59,59,0.35);margin:10px 0">APORTES</h2>
+    </div>
+
+    <div class="section">
+      <div class="products" id="productsGrid">
+        <!-- 10 productos usando el GIF que diste -->
+        <!-- product tiles -->
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<!-- Music persistent -->
+<div id="music-toggle" style="position:fixed;right:18px;bottom:18px;width:56px;height:56px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.7);color:#fff;border:2px solid rgba(255,255,255,0.06);cursor:pointer;z-index:1500;font-size:22px">🔊</div>
+<audio id="bg-music" src="https://files.catbox.moe/ikc7rj.mp3" loop preload="auto"></audio>
+
+<script>
+(() => {
+  const intro = document.getElementById('intro');
+  const enterBtn = document.getElementById('enter-btn');
+  const logoText = document.getElementById('logo-text');
+  const app = document.getElementById('app');
+  const teamBar = document.getElementById('team-bar');
+  const teamView = document.getElementById('team-view');
+  const aportesView = document.getElementById('aportes-view');
+  const btnAportes = document.getElementById('btn-aportes');
+  const backToTeam = document.getElementById('back-to-team');
+  const music = document.getElementById('bg-music');
+  const musicToggle = document.getElementById('music-toggle');
+  const productsGrid = document.getElementById('productsGrid');
+
+  // Product GIF URL (user-provided)
+  const productGif = "https://media.discordapp.net/attachments/1388565470642442370/1413328153883054192/standard.gif?ex=691090aa&is=690f3f2a&hm=7a413e0415a979b16bb2264f6e06d2da92389257f56ac098a301f398ff401e07&=";
+
+  // create 10 product tiles
+  for(let i=1;i<=10;i++){
+    const div = document.createElement('div');
+    div.className = 'product';
+    div.innerHTML = `<img src="${productGif}" alt="Producto ${i}">` +
+                    `<p>Producto ${i} - descripción.</p>` +
+                    `<a class="buy-btn" href="https://discord.gg/W3zan8fpSG" target="_blank" rel="noopener">Comprar</a>`;
+    productsGrid.appendChild(div);
+  }
+
+  // Helper: show view with fade/zoom transitions (and apply focus)
+  function showView(showEl, hideEl){
+    if(hideEl){
+      hideEl.classList.remove('visible');
+      hideEl.style.pointerEvents = 'none';
+    }
+    // small delay to allow hide transition (we keep it fast)
+    setTimeout(() => {
+      showEl.classList.add('visible');
+      showEl.style.pointerEvents = 'auto';
+      // when showing team, also show team-bar fade-in simultaneous
+      if(showEl.id === 'team-view') {
+        teamBar.classList.add('visible');
+      } else {
+        teamBar.classList.remove('visible');
+      }
+    }, 30);
+  }
+
+  // Start: only intro visible
+  app.style.display = 'none';
+  // Show logo text sizes accordingly
+  function setLogoSize(){ logoText.style.fontSize = window.innerWidth <=700 ? '50px' : '80px'; }
+  setLogoSize();
+  window.addEventListener('resize', setLogoSize);
+
+  // Click ENTER: show neon text for 3s, then show SPA and team with fade-in simultaneous
+  enterBtn.addEventListener('click', async () => {
+    // mark intent to play music
+    try{ localStorage.setItem('inj_play_music','1'); }catch(e){}
+    enterBtn.style.display = 'none';
+    logoText.style.display = 'block';
+    logoText.classList.add('neon');
+    // animate neon (css transitions already)
+    await new Promise(r => setTimeout(r, 3000)); // 3s neon
+    // show the welcome text in app then delay 2s then show main content (you wanted welcome then go)
+    intro.classList.add('hidden');
+    setTimeout(() => { intro.style.display='none'; }, 900);
+    // display app
+    app.style.display = 'flex';
+    // show team view (visible class already in markup), but we animate teambar fade-in
+    setTimeout(()=> {
+      teamBar.classList.add('visible');
+    }, 120);
+    // start music (user gesture satisfied)
+    music.play().catch(()=>{});
+  });
+
+  // Aportes button: transition to aportes (fade + zoom in)
+  btnAportes.addEventListener('click', ()=> {
+    // fade out team view, then show aportes with zoom in effect
+    teamView.classList.remove('visible');
+    // small delay to allow fade
+    setTimeout(() => {
+      // apply scale effect for zoom in on aportes
+      aportesView.style.transform = 'scale(.96)';
+      aportesView.classList.add('visible');
+      // animate zoom in
+      setTimeout(()=>{ aportesView.style.transform = 'scale(1)'; }, 20);
+    }, 220);
+    // teamBar hide
+    teamBar.classList.remove('visible');
+    // preserve play intent
+    try{ localStorage.setItem('inj_play_music','1'); }catch(e){}
+  });
+
+  // Back button from aportes -> team (reverse)
+  backToTeam.addEventListener('click', ()=> {
+    aportesView.classList.remove('visible');
+    setTimeout(()=> {
+      // show team view and teamBar fade in simultaneously
+      teamView.classList.add('visible');
+      teamBar.classList.add('visible');
+    }, 200);
+  });
+
+  // Music toggle
+  function updateMusicIcon(){ musicToggle.textContent = music.paused ? '🔇' : '🔊'; }
+  musicToggle.addEventListener('click', ()=>{
+    if(music.paused) music.play().catch(()=>{});
+    else music.pause();
+    updateMusicIcon();
+  });
+  music.addEventListener('play', updateMusicIcon);
+  music.addEventListener('pause', updateMusicIcon);
+  updateMusicIcon();
+
+  // Pause music when tab hidden, remember state
+  document.addEventListener('visibilitychange', ()=>{
+    if(document.hidden){
+      if(!music.paused){ music.__wasPlaying = true; music.pause(); }
+    } else {
+      if(music.__wasPlaying){ music.play().catch(()=>{}); music.__wasPlaying = false; }
+    }
+  });
+
+  // Team bar drag to scroll on desktop
+  (function enableDragScroll(selector){
+    const el = document.querySelector(selector);
+    if(!el) return;
+    let isDown=false, startX, scrollLeft;
+    el.addEventListener('mousedown', (e)=>{
+      isDown=true; el.classList.add('dragging');
+      startX = e.pageX - el.offsetLeft; scrollLeft = el.scrollLeft;
+    });
+    el.addEventListener('mouseleave', ()=>{ isDown=false; el.classList.remove('dragging'); });
+    el.addEventListener('mouseup', ()=>{ isDown=false; el.classList.remove('dragging'); });
+    el.addEventListener('mousemove', (e)=>{
+      if(!isDown) return;
+      e.preventDefault();
+      const x = e.pageX - el.offsetLeft;
+      const walk = (x - startX) * 1;
+      el.scrollLeft = scrollLeft - walk;
+    });
+  })('#team-bar');
+
+  // Accessibility: Enter key triggers enter button
+  enterBtn.addEventListener('keyup', (e)=>{ if(e.key==='Enter') enterBtn.click(); });
+
+  // Ensure teamBar visible on load if user navigates back internally
+  if(localStorage.getItem('inj_play_music') === '1'){
+    // possible user refresh: show app directly (best-effort)
+    // Do not auto-play without gesture, but reveal app if they previously entered
+    // We'll not auto-play music to avoid browser blocks.
+    // Uncomment the next lines if you prefer auto-show:
+    // intro.style.display='none';
+    // app.style.display='flex';
+    // teamBar.classList.add('visible');
+  }
+
+})();
+</script>
+</body>
+</html>
